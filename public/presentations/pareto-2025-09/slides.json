@@ -1,0 +1,361 @@
+[
+  {
+    "id": "q2-2025-at-a-glance",
+    "type": "stats",
+    "title": "Q2 2025 at a Glance",
+    "items": [
+      { "label": "Revenue", "value": "$260.2m", "footnote": "↑ 52% QoQ" },
+      { "label": "EBITDA", "value": "$133.3m", "footnote": "↑ 68% QoQ" },
+      { "label": "Production", "value": "37.8 mboepd", "footnote": "Tyra 16.8 · Base 21.0" },
+      { "label": "Opex / boe", "value": "$30.3", "footnote": "↓ from $33.2 in Q1" },
+      { "label": "Operational efficiency", "value": "72.2%", "footnote": "incl. Tyra ramp-up" },
+      { "label": "Total liquidity", "value": "$718.3m", "footnote": "Cash $448.3m · RBL $270m" }
+    ]
+  },
+  {
+  "id": "value-one-liner",
+  "type": "text",
+  "title": "Strategy in One Line",
+  "md": "**Cash-focused, low-cost volumes; hedged price floors; Tyra ramp stabilising; disciplined capex.**"
+},
+  {
+    "id": "prod-by-hub-q1q2-img",
+    "type": "image",
+    "title": "Production by hub — Q1 vs Q2 2025",
+    "src": "/presentations/pareto-2025-09/production-by-hub-q1q2.png"
+  },
+  {
+    "id": "oil-gas-mix-q1q2-img",
+    "type": "image",
+    "title": "Oil vs gas mix — Q1 vs Q2 2025",
+    "src": "/presentations/pareto-2025-09/oil-gas-mix-q1q2.png"
+  },
+  {
+    "id": "opex-per-boe-q1q2-img",
+    "type": "image",
+    "title": "Opex per boe — Q1 vs Q2 2025",
+    "src": "/presentations/pareto-2025-09/opex-per-boe-q1q2.png"
+  },
+  {
+    "id": "guidance-vs-actuals-img",
+    "type": "image",
+    "title": "Guidance vs actuals (production trajectory)",
+    "src": "/presentations/pareto-2025-09/guidance-vs-actuals.png"
+  },
+  {
+    "id": "guidance-note",
+    "type": "stats",
+    "title": "Guidance & Capex (Q2’25)",
+    "items": [
+      { "label": "Q3 Prod. Guidance", "value": "43–49 mboepd", "footnote": "Base 21–23 · Tyra 22–26" },
+      { "label": "Q4 Prod. Guidance", "value": "47–53 mboepd", "footnote": "Base 21–23 · Tyra 26–30" },
+      { "label": "2025 Capex", "value": "$50–60m", "footnote": "Updated full-year estimate" },
+      { "label": "Tyra Ramp-up", "value": "~30 mboepd target", "footnote": "~98% wells commissioned; ~70% producing" }
+    ]
+  },
+  {
+    "id": "guidance-note-remark",
+    "type": "text",
+    "title": "Context",
+    "md": "Lower unit costs expected as Tyra stabilises; infill well program staged to preserve flexibility."
+  },
+  {
+    "id": "cover",
+    "type": "image",
+    "title": "Pareto Securities Energy Conference — Sep 2025",
+    "src": "/presentations/pareto-2025-09/cover.jpg",
+    "caption": "BlueNord ASA — 10 September 2025"
+  },
+  
+  {
+  "id": "about",
+  "type": "stats",
+  "title": "BlueNord — At a Glance",
+  "items": [
+    { "label": "Focus", "value": "E&P on DCS", "footnote": "Danish Continental Shelf" },
+    { "label": "Partnership", "value": "DUC (partner)", "footnote": "with TotalEnergies & Nordsøfonden" },
+    { "label": "Producing hubs", "value": "4", "footnote": "Dan · Gorm · Halfdan · Tyra" },
+    { "label": "Listing", "value": "Oslo Børs", "footnote": "Ticker: BNOR" },
+    { "label": "Policy", "value": "50–70% NCFO returns", "footnote": "2024–26 distribution framework" },
+    { "label": "Q2 Production", "value": "37.8 mboepd", "footnote": "Tyra 16.8 · Base 21.0" }
+  ]
+},
+  {
+  "id": "strategy-compact",
+  "type": "stats",
+  "title": "Strategy at a Glance",
+  "items": [
+    { "label": "Core focus", "value": "Danish Continental Shelf", "footnote": "BlueNord partner in DUC" },
+    { "label": "Hubs", "value": "Dan · Gorm · Halfdan · Tyra", "footnote": "Production-led reinvestment" },
+    { "label": "Capital returns", "value": "50–70% NCFO", "footnote": "Policy for 2024–26" },
+    { "label": "Cost discipline", "value": "$30.3/boe (Q2)", "footnote": "Target: lower with Tyra steady-state" }
+  ]
+},
+{
+  "id": "hedge-and-cost-snapshot",
+  "type": "stats",
+  "title": "Hedges & Cost — Snapshot",
+  "items": [
+    { "label": "Oil hedge ’25", "value": "4.90m bbl @ $73.6", "footnote": "2026: 3.36m @ $68.6; 2027: 1.65m @ $65.5" },
+    { "label": "Gas hedge ’25", "value": "7.43m MWh @ €40.2", "footnote": "2026: 5.78m @ €35.3; 2027: 1.31m @ €33.6" },
+    { "label": "Unit opex (Q2)", "value": "$30.3/boe", "footnote": "↓ from $33.2 in Q1" },
+    { "label": "Liquidity", "value": "$718m", "footnote": "Cash $448m · RBL $270m" }
+  ]
+},
+  {
+  "id": "tyra",
+  "type": "chart",
+  "title": "Tyra — Strong Reservoir & Operator Actions",
+  "chart": "tyra-performance",
+  "args": {
+    "series": [
+      { "period": "Apr", "avg": 14.2, "peak": 22.3 },
+      { "period": "May", "avg": 18.1, "peak": 26.1 },
+      { "period": "Jun", "avg": 20.0, "peak": 27.7 }
+    ],
+    "plateau": { "low": 28, "high": 32 },
+    "note": "**Operator update:** Reliability study completed; remedial actions scheduled for **Q3–Q4 2025** to stabilise process controls, improve uptime and reach ~30 mboepd net plateau."
+  }
+},
+ 
+  {
+    "id": "hedge-portfolio",
+    "type": "chart",
+    "title": "Hedge Portfolio — coverage & pricing",
+    "chart": "hedge-portfolio"
+  },
+  {
+    "id": "hedge-bridge-q3q4",
+    "type": "chart",
+    "title": "Expected Turnover & EBITDA — Hedged vs Unhedged (Q3 & Q4 2025)",
+    "chart": "hedge-bridge",
+    "args": {
+      "periods": [
+        {
+          "label": "Q3 2025",
+          "oil": {
+            "hedged_bbl": 1200000,
+            "hedge_price_usd_bbl": 73.6,
+            "guidance_bbl": 1800000,
+            "unhedged_price_usd_bbl": 70
+          },
+          "gas": {
+            "hedged_mwh": 1800000,
+            "hedge_price_eur_mwh": 40.2,
+            "guidance_mwh": 2600000,
+            "unhedged_price_eur_mwh": 33,
+            "fx_eur_usd": 1.08
+          },
+          "costs": { "opex_per_boe_usd": 30.3, "other_costs_usd": 0 }
+        },
+        {
+          "label": "Q4 2025",
+          "oil": {
+            "hedged_bbl": 1250000,
+            "hedge_price_usd_bbl": 73.6,
+            "guidance_bbl": 1900000,
+            "unhedged_price_usd_bbl": 70
+          },
+          "gas": {
+            "hedged_mwh": 1917500,
+            "hedge_price_eur_mwh": 40.2,
+            "guidance_mwh": 2600000,
+            "unhedged_price_eur_mwh": 33,
+            "fx_eur_usd": 1.08
+          },
+          "costs": { "opex_per_boe_usd": 30.3, "other_costs_usd": 0 }
+        }
+      ]
+    }
+  },
+  {
+  "id": "hedge-bridge-q3q4-2026",
+  "type": "chart",
+  "title": "Expected Turnover & EBITDA — Hedged vs Unhedged (Q3’25–Q4’26)",
+  "chart": "hedge-bridge",
+  "args": {
+    "mwh_to_boe": 0.171,
+    "periods": [
+      {
+        "label": "Q3 2025",
+        "oil": { "hedged_bbl": 1200000, "hedge_price_usd_bbl": 73.6, "guidance_bbl": 1800000, "unhedged_price_usd_bbl": 70 },
+        "gas": { "hedged_mwh": 1800000, "hedge_price_eur_mwh": 40.2, "guidance_mwh": 2600000, "unhedged_price_eur_mwh": 33, "fx_eur_usd": 1.08 },
+        "costs": { "opex_per_boe_usd": 30.3 }
+      },
+      {
+        "label": "Q4 2025",
+        "oil": { "hedged_bbl": 1250000, "hedge_price_usd_bbl": 73.6, "guidance_bbl": 1900000, "unhedged_price_usd_bbl": 70 },
+        "gas": { "hedged_mwh": 1917500, "hedge_price_eur_mwh": 40.2, "guidance_mwh": 2600000, "unhedged_price_eur_mwh": 33, "fx_eur_usd": 1.08 },
+        "costs": { "opex_per_boe_usd": 30.3 }
+      },
+      {
+        "label": "Q1 2026",
+        "oil": { "hedged_bbl": 840000, "hedge_price_usd_bbl": 68.6, "guidance_bbl": 1900000, "unhedged_price_usd_bbl": 70 },
+        "gas": { "hedged_mwh": 1443750, "hedge_price_eur_mwh": 35.3, "guidance_mwh": 2600000, "unhedged_price_eur_mwh": 33, "fx_eur_usd": 1.08 },
+        "costs": { "opex_per_boe_usd": 30.3 }
+      },
+      {
+        "label": "Q2 2026",
+        "oil": { "hedged_bbl": 840000, "hedge_price_usd_bbl": 68.6, "guidance_bbl": 1900000, "unhedged_price_usd_bbl": 70 },
+        "gas": { "hedged_mwh": 1443750, "hedge_price_eur_mwh": 35.3, "guidance_mwh": 2600000, "unhedged_price_eur_mwh": 33, "fx_eur_usd": 1.08 },
+        "costs": { "opex_per_boe_usd": 30.3 }
+      },
+      {
+        "label": "Q3 2026",
+        "oil": { "hedged_bbl": 840000, "hedge_price_usd_bbl": 68.6, "guidance_bbl": 1900000, "unhedged_price_usd_bbl": 70 },
+        "gas": { "hedged_mwh": 1443750, "hedge_price_eur_mwh": 35.3, "guidance_mwh": 2600000, "unhedged_price_eur_mwh": 33, "fx_eur_usd": 1.08 },
+        "costs": { "opex_per_boe_usd": 30.3 }
+      },
+      {
+        "label": "Q4 2026",
+        "oil": { "hedged_bbl": 840000, "hedge_price_usd_bbl": 68.6, "guidance_bbl": 1900000, "unhedged_price_usd_bbl": 70 },
+        "gas": { "hedged_mwh": 1443750, "hedge_price_eur_mwh": 35.3, "guidance_mwh": 2600000, "unhedged_price_eur_mwh": 33, "fx_eur_usd": 1.08 },
+        "costs": { "opex_per_boe_usd": 30.3 }
+      }
+    ]
+  }
+},
+  {
+    "id": "production-sep2025",
+    "type": "chart",
+    "title": "Preliminary Production – September 2025",
+    "chart": "production-update"
+  },
+  {
+    "id": "production-bars-sep2025",
+    "type": "chart",
+    "title": "Production by Hub — Sep 2025 vs Q3 Avg",
+    "chart": "production-bars"
+  },
+  {
+    "id": "duc-ownership",
+    "type": "chart",
+    "title": "DUC Ownership",
+    "chart": "duc-ownership"
+  },
+  {
+    "id": "reserves-card",
+    "type": "chart",
+    "title": "Substantial Reserves (with breakdown)",
+    "chart": "reserves-card"
+  },
+  {
+    "id": "prod-goal",
+    "type": "chart",
+    "title": "Near-term Production Growth",
+    "chart": "prod-goal"
+  },
+  {
+    "id": "prod-growth-arrow",
+    "type": "chart",
+    "title": "Near-term Production Growth (Arrow View)",
+    "chart": "prod-growth-arrow"
+  },
+  {
+    "id": "production-capex-summary",
+    "type": "chart",
+    "title": "Production & Capex Summary (Q2 2025)",
+    "chart": "prod-by-hub"
+  },
+  {
+    "id": "guidance-progress-chart",
+    "type": "chart",
+    "title": "Quarterly Guidance vs Actuals",
+    "chart": "guidance-vs-actuals"
+  },
+  {
+    "id": "capex-summary",
+    "type": "text",
+    "title": "Capex & Opex Overview",
+    "md": "Q2 2025 production reached **37.8 mboepd**, driven by Tyra ramp-up (16.8 mboepd) and stable base assets.\n\nDirect field opex fell to **$30.3/boe**. Total Q2 Capex was **$14.4m**, focused on Halfdan HCA Gas Lift and Tyra reinstatement.\n\n2025 Capex guidance is **$50–60m**. Production expected to rise to **43–49 mboepd** in Q3 and **47–53 mboepd** in Q4."
+  },
+  {
+    "id": "q2-overview-text",
+    "type": "text",
+    "title": "Q2 2025 at a Glance (Section Marker)",
+    "md": "Snapshot and charts for Q2 2025 performance."
+  },
+  {
+    "id": "production-by-hub-q1q2-chart",
+    "type": "chart",
+    "title": "Production by Hub — Q1 vs Q2 2025",
+    "chart": "production-by-hub-q1q2"
+  },
+  {
+    "id": "oil-gas-mix-q1q2-chart",
+    "type": "chart",
+    "title": "Production Mix — Oil vs Gas (Q1–Q2 2025)",
+    "chart": "oil-gas-mix-q1q2"
+  },
+  {
+    "id": "guidance-vs-actuals-2025-chart",
+    "type": "chart",
+    "title": "Production Guidance vs Actuals (2025)",
+    "chart": "guidance-vs-actuals"
+  },
+  {
+    "id": "opex-per-boe-q1q2-chart",
+    "type": "chart",
+    "title": "Production Cost per boe — Q1 vs Q2 2025",
+    "chart": "opex-per-boe-q1q2"
+  },
+  {
+    "id": "q2-summary",
+    "type": "text",
+    "title": "Highlights Summary",
+    "md": "Q2 2025 production reached **37.8 mboepd**, driven by Tyra ramp-up (16.8 mboepd) and stable base assets.\n\nDirect field opex fell to **$30.3/boe**. Total Q2 Capex was **$14.4m**, focused on Halfdan HCA Gas Lift and Tyra reinstatement.\n\n2025 Capex guidance is **$50–60m**. Production expected to rise to **43–49 mboepd in Q3** and **47–53 mboepd in Q4**."
+  },
+  {
+    "id": "management",
+    "type": "profiles",
+    "title": "Management Presenters",
+    "people": [
+      {
+        "name": "Euan Shirlaw",
+        "title": "Chief Executive Officer",
+        "photo": "/presentations/pareto-2025-09/euan-shirlaw.png",
+        "bio": "Chief Executive Officer since 2022, with prior senior advisory roles in energy finance at BMO Capital Markets, Credit Suisse, RBC Capital Markets and Rothschild.",
+        "bioLong": "Euan became CEO of BlueNord in 2022 after joining as CFO in 2019. He has advised a wide range of oil & gas companies on M&A and capital markets across BMO Capital Markets, Credit Suisse, RBC Capital Markets and Rothschild in London. He holds an MSc in Business and Accountancy from the University of Edinburgh."
+      },
+      {
+        "name": "Jacqueline Lindmark Boye",
+        "title": "Chief Financial Officer",
+        "photo": "/presentations/pareto-2025-09/jacqueline-boye.jpg",
+        "bio": "Chief Financial Officer with 20 years’ global finance and audit experience at Shell, AGL Energy, EY and PwC.",
+        "bioLong": "Jacqueline joined BlueNord in 2019 and became CFO in October 2023. She brings over 20 years of finance and audit experience across Australia, the UK and Denmark, with leadership roles at Shell, AGL Energy, EY and PwC. She holds B.Com and B.A. degrees from Monash University and is a member of Chartered Accountants ANZ."
+      },
+      {
+        "name": "Miriam Jager Lykke",
+        "title": "Chief Operating Officer",
+        "photo": "/presentations/pareto-2025-09/miriam-lykke.png",
+        "bio": "Chief Operating Officer with nearly 30 years’ upstream oil & gas experience from Shell and DONG Energy.",
+        "bioLong": "Miriam joined BlueNord in 2019 and was appointed COO after serving as Asset Manager from 2022. She has nearly three decades of upstream oil & gas experience and previously held senior technical and management roles at Shell and DONG Energy. She holds an MSc in Civil Engineering and a PhD in Rock Mechanics from DTU."
+      },
+      {
+        "name": "Cathrine F. Torgersen",
+        "title": "Chief Corporate Affairs Officer",
+        "photo": "/presentations/pareto-2025-09/cathrine-torgersen.jpg",
+        "bio": "Chief Corporate Affairs Officer, formerly Senior Account Director at Hill+Knowlton and financial communications advisor to energy and shipping companies.",
+        "bioLong": "Cathrine joined BlueNord’s Executive Team in 2019 and serves as Chief Corporate Affairs Officer. Previously she was Senior Account Director at Hill+Knowlton advising energy and shipping clients, led the Financial Communications practice, and worked in institutional high-yield sales at Pareto Securities Inc. (NY) and Clarksons Platou. She holds a BSc in Business Administration and Finance from Bocconi University."
+      }
+    ]
+  },
+  {
+    "id": "prod-by-field",
+    "type": "chart",
+    "title": "Production by Field",
+    "chart": "prod-by-field"
+  },
+  {
+    "id": "intro",
+    "type": "text",
+    "title": "Highlights",
+    "md": "Revenue up **12%** year on year."
+  },
+  {
+    "id": "deck",
+    "type": "download",
+    "title": "Download Official PDF",
+    "href": "/presentations/pareto-2025-09/pareto-2025-09.pdf"
+  }
+]
