@@ -14,36 +14,42 @@
   },
   {
   "id": "value-one-liner",
+  "section": "Strategy",
   "type": "text",
   "title": "Strategy in One Line",
   "md": "**Cash-focused, low-cost volumes; hedged price floors; Tyra ramp stabilising; disciplined capex.**"
 },
   {
     "id": "prod-by-hub-q1q2-img",
+    "section": "Production",
     "type": "image",
     "title": "Production by hub — Q1 vs Q2 2025",
     "src": "/presentations/pareto-2025-09/production-by-hub-q1q2.png"
   },
   {
     "id": "oil-gas-mix-q1q2-img",
+    "section": "Production",
     "type": "image",
     "title": "Oil vs gas mix — Q1 vs Q2 2025",
     "src": "/presentations/pareto-2025-09/oil-gas-mix-q1q2.png"
   },
   {
     "id": "opex-per-boe-q1q2-img",
+    "section": "Operating",
     "type": "image",
     "title": "Opex per boe — Q1 vs Q2 2025",
     "src": "/presentations/pareto-2025-09/opex-per-boe-q1q2.png"
   },
   {
     "id": "guidance-vs-actuals-img",
+    "section": "Production",
     "type": "image",
     "title": "Guidance vs actuals (production trajectory)",
     "src": "/presentations/pareto-2025-09/guidance-vs-actuals.png"
   },
   {
     "id": "guidance-note",
+    "section": "Q2 Overview",
     "type": "stats",
     "title": "Guidance & Capex (Q2’25)",
     "items": [
@@ -55,12 +61,14 @@
   },
   {
     "id": "guidance-note-remark",
+    "section": "Q2 Overview",
     "type": "text",
     "title": "Context",
     "md": "Lower unit costs expected as Tyra stabilises; infill well program staged to preserve flexibility."
   },
   {
     "id": "cover",
+    "section": "Q2 Overview",
     "type": "image",
     "title": "Pareto Securities Energy Conference — Sep 2025",
     "src": "/presentations/pareto-2025-09/cover.jpg",
@@ -69,6 +77,7 @@
   
   {
   "id": "about",
+  "section": "Company",
   "type": "stats",
   "title": "BlueNord — At a Glance",
   "items": [
@@ -82,6 +91,7 @@
 },
   {
   "id": "strategy-compact",
+  "section": "Strategy",
   "type": "stats",
   "title": "Strategy at a Glance",
   "items": [
@@ -93,6 +103,7 @@
 },
 {
   "id": "hedge-and-cost-snapshot",
+  "section": "Financials",
   "type": "stats",
   "title": "Hedges & Cost — Snapshot",
   "items": [
@@ -104,6 +115,7 @@
 },
   {
   "id": "tyra",
+  "section": "Production",
   "type": "chart",
   "title": "Tyra — Strong Reservoir & Operator Actions",
   "chart": "tyra-performance",
@@ -120,12 +132,14 @@
  
   {
     "id": "hedge-portfolio",
+    "section": "Financials",
     "type": "chart",
     "title": "Hedge Portfolio — coverage & pricing",
     "chart": "hedge-portfolio"
   },
   {
     "id": "hedge-bridge-q3q4",
+    "section": "Financials",
     "type": "chart",
     "title": "Expected Turnover & EBITDA — Hedged vs Unhedged (Q3 & Q4 2025)",
     "chart": "hedge-bridge",
@@ -170,6 +184,7 @@
   },
   {
   "id": "hedge-bridge-q3q4-2026",
+  "section": "Financials",
   "type": "chart",
   "title": "Expected Turnover & EBITDA — Hedged vs Unhedged (Q3’25–Q4’26)",
   "chart": "hedge-bridge",
@@ -217,96 +232,112 @@
 },
   {
     "id": "production-sep2025",
+    "section": "Production",
     "type": "chart",
     "title": "Preliminary Production – September 2025",
     "chart": "production-update"
   },
   {
     "id": "production-bars-sep2025",
+    "section": "Production",
     "type": "chart",
     "title": "Production by Hub — Sep 2025 vs Q3 Avg",
     "chart": "production-bars"
   },
   {
     "id": "duc-ownership",
+    "section": "Company",
     "type": "chart",
     "title": "DUC Ownership",
     "chart": "duc-ownership"
   },
   {
     "id": "reserves-card",
+    "section": "Q2 Overview",
     "type": "chart",
     "title": "Substantial Reserves (with breakdown)",
     "chart": "reserves-card"
   },
   {
     "id": "prod-goal",
+    "section": "Production",
     "type": "chart",
     "title": "Near-term Production Growth",
     "chart": "prod-goal"
   },
   {
     "id": "prod-growth-arrow",
+    "section": "Production",
     "type": "chart",
     "title": "Near-term Production Growth (Arrow View)",
     "chart": "prod-growth-arrow"
   },
   {
     "id": "production-capex-summary",
+    "section": "Financials",
     "type": "chart",
     "title": "Production & Capex Summary (Q2 2025)",
     "chart": "prod-by-hub"
   },
   {
     "id": "guidance-progress-chart",
+    "section": "Financials",
     "type": "chart",
     "title": "Quarterly Guidance vs Actuals",
     "chart": "guidance-vs-actuals"
   },
   {
     "id": "capex-summary",
+    "section": "Financials",
     "type": "text",
     "title": "Capex & Opex Overview",
     "md": "Q2 2025 production reached **37.8 mboepd**, driven by Tyra ramp-up (16.8 mboepd) and stable base assets.\n\nDirect field opex fell to **$30.3/boe**. Total Q2 Capex was **$14.4m**, focused on Halfdan HCA Gas Lift and Tyra reinstatement.\n\n2025 Capex guidance is **$50–60m**. Production expected to rise to **43–49 mboepd** in Q3 and **47–53 mboepd** in Q4."
   },
   {
     "id": "q2-overview-text",
+    "section": "Q2 Overview",
     "type": "text",
     "title": "Q2 2025 at a Glance (Section Marker)",
     "md": "Snapshot and charts for Q2 2025 performance."
   },
   {
     "id": "production-by-hub-q1q2-chart",
+    "section": "Production",
     "type": "chart",
     "title": "Production by Hub — Q1 vs Q2 2025",
     "chart": "production-by-hub-q1q2"
   },
   {
     "id": "oil-gas-mix-q1q2-chart",
+    "section": "Production",
     "type": "chart",
     "title": "Production Mix — Oil vs Gas (Q1–Q2 2025)",
     "chart": "oil-gas-mix-q1q2"
   },
   {
     "id": "guidance-vs-actuals-2025-chart",
+    "section": "Production",
     "type": "chart",
     "title": "Production Guidance vs Actuals (2025)",
     "chart": "guidance-vs-actuals"
   },
   {
     "id": "opex-per-boe-q1q2-chart",
+    "section": "Financials",
     "type": "chart",
     "title": "Production Cost per boe — Q1 vs Q2 2025",
     "chart": "opex-per-boe-q1q2"
   },
   {
     "id": "q2-summary",
+    "section": "Financials",
     "type": "text",
     "title": "Highlights Summary",
     "md": "Q2 2025 production reached **37.8 mboepd**, driven by Tyra ramp-up (16.8 mboepd) and stable base assets.\n\nDirect field opex fell to **$30.3/boe**. Total Q2 Capex was **$14.4m**, focused on Halfdan HCA Gas Lift and Tyra reinstatement.\n\n2025 Capex guidance is **$50–60m**. Production expected to rise to **43–49 mboepd in Q3** and **47–53 mboepd in Q4**."
   },
   {
     "id": "management",
+    "section": "Company",
     "type": "profiles",
     "title": "Management Presenters",
     "people": [
@@ -342,12 +373,14 @@
   },
   {
     "id": "prod-by-field",
+    "section": "Production",
     "type": "chart",
     "title": "Production by Field",
     "chart": "prod-by-field"
   },
   {
     "id": "intro",
+    "section": "Financials",
     "type": "text",
     "title": "Highlights",
     "md": "Revenue up **12%** year on year."

@@ -4,63 +4,83 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Card, Container, Prose } from "@/components/ui";
-import SectionNav from "@/components/SectionNav";
+import SectionNav2 from "@/components/SectionNav2"; // grouped nav (tabs + pills)
 import DownloadButton from "@/components/DownloadButton";
 import ProfilesGrid from "@/components/ProfilesGrid";
 import ChartRouter from "@/components/ChartRouter";
 import { motion } from "framer-motion";
 
-// Slide item shape
-type SlideItem =
-  | { id: string; type: "text"; title: string; md: string }
-  | { id: string; type: "chart"; title: string; chart: string; args?: Record<string, unknown> }
-  | { id: string; type: "video"; title: string; src: string }
-  | { id: string; type: "download"; title: string; href: string }
-  | { id: string; type: "image"; title: string; src: string; caption?: string }
-  | {
-      id: string;
-      type: "profiles";
-      title: string;
-      people: {
-        name: string;
-        title: string;
-        photo: string;
-        bio?: string;
-        bioLong?: string;
-        link?: string;
-      }[];
-    }
-  | {
-      id: string;
-      type: "stats";
-      title: string;
-      items: { label: string; value: string; footnote?: string }[];
-    };
+/* ----------------------------
+   Types
+---------------------------- */
+type BaseSlide = {
+  id: string;
+  section?: string; // <-- optional section name for grouped nav
+  title: string;
+};
 
-// Ensure every slide gets a unique DOM id, even if source ids repeat
-function makeUniqueIds<T extends { id: string; title?: string }>(arr: T[]) {
+type SlideText = BaseSlide & { type: "text"; md: string };
+type SlideChart = BaseSlide & { type: "chart"; chart: string; args?: Record<string, unknown> };
+type SlideVideo = BaseSlide & { type: "video"; src: string };
+type SlideDownload = BaseSlide & { type: "download"; href: string };
+type SlideImage = BaseSlide & { type: "image"; src: string; caption?: string };
+type SlideProfiles = BaseSlide & {
+  type: "profiles";
+  people: {
+    name: string;
+    title: string;
+    photo: string;
+    bio?: string;
+    bioLong?: string;
+    link?: string;
+  }[];
+};
+type SlideStats = BaseSlide & {
+  type: "stats";
+  items: { label: string; value: string; footnote?: string }[];
+};
+
+type SlideItem =
+  | SlideText
+  | SlideChart
+  | SlideVideo
+  | SlideDownload
+  | SlideImage
+  | SlideProfiles
+  | SlideStats;
+
+// Runtime shape with unique DOM id
+type SlideWithDom = SlideItem & { __domId: string };
+
+/* ----------------------------
+   Helpers
+---------------------------- */
+function makeUniqueIds<T extends { id: string }>(arr: T[]): (T & { __domId: string })[] {
   const seen = new Map<string, number>();
   return arr.map((s, idx) => {
     const base = (s.id || `section-${idx}`).trim();
     const count = seen.get(base) ?? 0;
     seen.set(base, count + 1);
     const domId = count === 0 ? base : `${base}-${count + 1}`;
-    return { ...s, __domId: domId } as T & { __domId: string };
+    return { ...s, __domId: domId };
   });
 }
 
+/* ----------------------------
+   Page
+---------------------------- */
 export default function PresentationPage() {
   const router = useRouter();
   const params = useParams();
 
-  // Get slug from route params
+  // slug from route params
   const rawSlug = (params as Record<string, string | string[] | undefined>)?.slug;
   const slug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug || "";
 
-  // Normalize: trim spaces, strip trailing slashes/dots
+  // normalize (strip trailing slashes/dots)
   const cleanSlug = slug.toString().trim().replace(/\/+$/g, "").replace(/\.+$/g, "");
 
-  // Optional: auto-correct the URL if a trailing dot/slash sneaks in
+  // auto-correct URL if needed
   useEffect(() => {
     if (slug && slug !== cleanSlug) {
       router.replace(`/${encodeURIComponent(cleanSlug)}`);
@@ -80,16 +100,12 @@ export default function PresentationPage() {
       setErr("Missing slug in URL.");
       return;
     }
-    // (Optional) allow only sane chars
     if (!/^[a-z0-9._-]+$/i.test(cleanSlug)) {
       setErr(`Slug contains unexpected characters: "${cleanSlug}"`);
       return;
     }
 
     const url = `/presentations/${encodeURIComponent(cleanSlug)}/slides.json`;
-    // Debug log (browser console)
-    console.log("[slides] raw:", slug, "clean:", cleanSlug, "→", url);
-
     (async () => {
       try {
         const res = await fetch(url, { cache: "no-store" });
@@ -98,7 +114,7 @@ export default function PresentationPage() {
         if (!Array.isArray(data)) throw new Error("slides.json did not return an array");
         setSlides(data);
         setReady(true);
-      } catch (e: unknown) {
+      } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         console.error("[slides] load error:", msg);
         setErr(msg);
@@ -106,19 +122,52 @@ export default function PresentationPage() {
     })();
   }, [cleanSlug, slug]);
 
-  // Build slides with unique DOM ids (recompute whenever slides change)
-  const slidesWithIds = useMemo(() => makeUniqueIds(slides), [slides]);
+  // assign unique DOM ids
+  const slidesWithIds = useMemo<SlideWithDom[]>(() => makeUniqueIds(slides), [slides]);
 
-  // Use these for the section nav (title + unique id)
-  const sections = slidesWithIds.map((s) => ({ id: s.__domId, title: s.title }));
+  // group slides by section (in insertion order)
+  const groups = useMemo(() => {
+    const map = new Map<
+      string,
+      { section: string; slides: { id: string; title: string; __domId: string }[] }
+    >();
+    for (const s of slidesWithIds) {
+      const sec = (s.section || "General").trim();
+      if (!map.has(sec)) map.set(sec, { section: sec, slides: [] });
+      map.get(sec)!.slides.push({ id: s.id, title: s.title, __domId: s.__domId });
+    }
+    return Array.from(map.values());
+  }, [slidesWithIds]);
+
+  // track which slide is currently near the top (for highlighting the pill)
+  const [activeDomId, setActiveDomId] = useState<string | null>(null);
+  useEffect(() => {
+    const els = slidesWithIds
+      .map((s) => document.getElementById(s.__domId))
+      .filter(Boolean) as HTMLElement[];
+    if (!els.length) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const vis = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        const top = vis[0]?.target?.id;
+        if (top) setActiveDomId(top);
+      },
+      { rootMargin: "-80px 0px -60% 0px", threshold: [0, 0.1, 0.5] }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [slidesWithIds]);
 
   return (
     <Container>
-      {/* ⬇️ Tiny spacing tweak for mobile */}
+      {/* header */}
       <div className="mb-4 md:mb-6 flex items-center justify-between">
         <h1 className="text-xl md:text-3xl font-semibold tracking-tight">Presentation</h1>
       </div>
 
+      {/* load error */}
       {err && (
         <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           <div className="font-semibold mb-1">Could not load slides</div>
@@ -131,14 +180,16 @@ export default function PresentationPage() {
         </div>
       )}
 
-      {sections.length > 1 && <SectionNav sections={sections} />}
+      {/* grouped nav (tabs + pills) */}
+      {groups.length > 0 && <SectionNav2 groups={groups} activeDomId={activeDomId} />}
 
-      <div className="mt-6 space-y-6">
+      {/* slides */}
+      <div className="mt-5 space-y-6">
         {ready &&
           slidesWithIds.map((s, idx) => (
             <motion.section
-              key={s.__domId} // ✅ unique React key
-              id={s.__domId}  // ✅ unique DOM id
+              key={s.__domId}
+              id={s.__domId}
               initial={{ opacity: 0, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
@@ -146,7 +197,14 @@ export default function PresentationPage() {
               className="scroll-mt-24"
             >
               <Card>
-                <h2 className="text-xl md:text-2xl font-semibold">{s.title}</h2>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl md:text-2xl font-semibold">{s.title}</h2>
+                  {s.section && (
+                    <div className="text-xs text-neutral-500">
+                      {s.section}
+                    </div>
+                  )}
+                </div>
 
                 {s.type === "text" && (
                   <Prose className="mt-3 prose prose-zinc max-w-none">
@@ -209,14 +267,14 @@ export default function PresentationPage() {
 
                 {s.type === "chart" && (
                   <div className="mt-4">
-                    <ChartRouter name={(s as any).chart} args={(s as any).args} />
+                    <ChartRouter name={s.chart} args={s.args} />
                   </div>
                 )}
 
                 {s.type === "video" && (
                   <div className="mt-4 aspect-video overflow-hidden rounded-xl">
                     <iframe
-                      src={(s as any).src}
+                      src={s.src}
                       className="h-full w-full"
                       allow="autoplay; fullscreen; picture-in-picture"
                       loading="lazy"
@@ -228,7 +286,7 @@ export default function PresentationPage() {
                   <div className="mt-3">
                     <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-soft">
                       <img
-                        src={(s as any).src}
+                        src={s.src}
                         alt={s.title}
                         className="block h-auto w-full"
                         loading="lazy"
@@ -238,21 +296,21 @@ export default function PresentationPage() {
                         }}
                       />
                     </div>
-                    {(s as any).caption && (
-                      <p className="mt-2 text-sm text-neutral-600">{(s as any).caption}</p>
+                    {s.caption && (
+                      <p className="mt-2 text-sm text-neutral-600">{s.caption}</p>
                     )}
                   </div>
                 )}
 
                 {s.type === "profiles" && (
                   <div className="mt-3">
-                    <ProfilesGrid people={(s as any).people} />
+                    <ProfilesGrid people={s.people} />
                   </div>
                 )}
 
                 {s.type === "download" && (
                   <div className="mt-4">
-                    <DownloadButton href={(s as any).href} />
+                    <DownloadButton href={s.href} />
                   </div>
                 )}
               </Card>

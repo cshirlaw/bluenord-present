@@ -3,9 +3,16 @@
 /* === Tailwind v4 custom tokens === */
 @theme {
   /* Brand colours */
-  --color-brand: #16A34A;
+  --color-brand: #16A34A;         /* emerald-600 */
   --color-brand-dark: #0D5E2A;
   --color-brand-light: #DCFCE7;
+
+  /* Chart palette (keep in sync with components/charts/palette.ts) */
+  --color-oil:  #0EA5E9;          /* sky-500  */
+  --color-gas:  #22C55E;          /* green-500*/
+  --color-opex: #8B5CF6;          /* violet-500*/
+  --color-capex:#F59E0B;          /* amber-500*/
+  --color-base: #64748B;          /* slate-500*/
 
   /* Design tokens */
   --shadow-soft: 0 1px 2px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.06);
@@ -29,6 +36,9 @@ html { scroll-behavior: smooth; }
     @apply text-brand underline-offset-4 decoration-2 hover:underline;
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 rounded;
   }
+
+  /* Nicer image rendering */
+  img { image-rendering: -webkit-optimize-contrast; }
 }
 
 /* === Reusable components === */
@@ -39,11 +49,17 @@ html { scroll-behavior: smooth; }
     box-shadow: var(--shadow-soft);
   }
 
-  /* Pills for SectionNav */
+  /* Shadow utility used in various components */
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+
+  /* Pills (legacy SectionNav) */
   .pill {
     @apply rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-sm;
     box-shadow: var(--shadow-soft);
+    transition: all .25s var(--ease-gentle);
   }
+  .pill:is(:hover,:focus-visible) { @apply -translate-y-0.5; }
+  .pill--active { @apply border-brand bg-brand text-white; }
 
   /* Primary button */
   .btn-brand {
@@ -53,4 +69,64 @@ html { scroll-behavior: smooth; }
     box-shadow: var(--shadow-soft);
     transition-timing-function: var(--ease-gentle);
   }
+
+  /* ====== New: Grouped SectionNav (tabs + sub-pills) ====== */
+  /* Top-level tabs row */
+  .tabs {
+    @apply sticky top-14 z-30;
+  }
+  .tabs__bar {
+    @apply card !p-2 flex items-center gap-2 overflow-x-auto whitespace-nowrap;
+    scrollbar-width: thin;
+  }
+  .tabs__btn {
+    @apply rounded-full px-3.5 py-1.5 text-sm border border-zinc-200 bg-white;
+    box-shadow: var(--shadow-soft);
+    transition: all .25s var(--ease-gentle);
+  }
+  .tabs__btn:is(:hover,:focus-visible) { @apply -translate-y-0.5; }
+  .tabs__btn--active { @apply bg-brand text-white border-brand; }
+
+  /* Second row: sub-pills for the slides in the active section */
+  .subnav {
+    @apply mt-2 flex gap-2 overflow-x-auto whitespace-nowrap px-1;
+    scrollbar-width: thin;
+  }
+  .subnav__pill {
+    @apply rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs;
+    box-shadow: var(--shadow-soft);
+    transition: all .25s var(--ease-gentle);
+  }
+  .subnav__pill:is(:hover,:focus-visible) { @apply -translate-y-0.5; }
+  .subnav__pill--active { @apply bg-brand text-white border-brand; }
+
+  /* Optional badge used in cards to show the section name */
+  .badge {
+    @apply inline-flex items-center rounded-full bg-zinc-100 text-zinc-600 px-2 py-1 text-[11px];
+  }
+
+  /* Prose tweaks (used by <Prose />) */
+  .prose h2, .prose h3 { @apply scroll-mt-24; }
+  .prose p + p { @apply mt-3; }
+}
+
+/* === Utilities (project-local) === */
+@layer utilities {
+  /* Hide ugly scrollbars on iOS/Android while keeping scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+  /* Chart axis/helper tint */
+  .axis-muted { color: #64748B; }
+}
+
+/* === Small responsive niceties === */
+@media (max-width: 480px) {
+  .card { @apply p-4; }
+  .tabs__bar { @apply gap-1; }
+  .tabs__btn { @apply px-3 py-1.5 text-[13px]; }
+  .subnav__pill { @apply px-2.5 py-1 text-[11.5px]; }
 }
