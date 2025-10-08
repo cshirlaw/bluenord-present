@@ -76,7 +76,8 @@ html { scroll-behavior: smooth; }
     @apply sticky top-14 z-30;
   }
   .tabs__bar {
-    @apply card !p-2 flex items-center gap-2 overflow-x-auto whitespace-nowrap;
+  @apply bg-white rounded-2xl p-2 md:p-2 flex items-center gap-2 overflow-x-auto whitespace-nowrap;
+  box-shadow: var(--shadow-soft);
     scrollbar-width: thin;
   }
   .tabs__btn {
