@@ -1,0 +1,8 @@
+[
+  { "month": "Mar 25", "avg": 5.5,  "peak": 21, "plateau": 30 },
+  { "month": "Apr 25", "avg": 12.8, "peak": 23 },
+  { "month": "May 25", "avg": 18.2, "peak": 26 },
+  { "month": "Jun 25", "avg": 19.5, "peak": 28 },
+  { "month": "Jul 25", "avg": 19.5, "peak": 26 },
+  { "month": "Aug 25", "avg": 15.3, "peak": 25 }
+]

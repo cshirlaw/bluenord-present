@@ -1,0 +1,25 @@
+[
+  {
+    "id": "intro",
+    "type": "text",
+    "title": "Intro",
+    "md": "Hello world from **demo-hello**. This is a text slide using Tailwind Typography."
+  },
+  {
+    "id": "chart-1",
+    "type": "chart",
+    "title": "Production by Year",
+    "chart": "prod_by_year"
+  },
+  {
+    "id": "video-1",
+    "type": "video",
+    "title": "Sample Video",
+    "src": "https://player.vimeo.com/video/657831189"
+  },
+  {
+    "id": "deck",
+    "type": "download",
+    "title": "Official PDF",
+    "href": "/presentations/demo-hello/demo-hello.pdf"
+  }

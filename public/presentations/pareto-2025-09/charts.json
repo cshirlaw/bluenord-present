@@ -1,0 +1,16 @@
+{
+  "prod-by-field": [
+    { "name": "Tyra", "boe": 21.3 },
+    { "name": "Halfdan", "boe": 18.9 },
+    { "name": "Gorm", "boe": 12.1 },
+    { "name": "Dan", "boe": 9.7 }
+  ]
+}
+{
+  "charts": [
+    { "id": "production-by-hub-q1q2", "file": "production-by-hub-q1q2.png" },
+    { "id": "oil-gas-mix-q1q2", "file": "oil-gas-mix-q1q2.png" },
+    { "id": "guidance-vs-actuals", "file": "guidance-vs-actuals.png" },
+    { "id": "opex-per-boe-q1q2", "file": "opex-per-boe-q1q2.png" }
+  ]
+}

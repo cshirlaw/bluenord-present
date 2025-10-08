@@ -1,0 +1,8 @@
+[
+  { "month": "Jan", "Halfdan": 9.2, "Dan": 6.1, "Gorm": 3.8, "Tyra": 0.0 },
+  { "month": "Feb", "Halfdan": 9.5, "Dan": 6.0, "Gorm": 4.1, "Tyra": 0.0 },
+  { "month": "Mar", "Halfdan": 9.8, "Dan": 6.3, "Gorm": 3.9, "Tyra": 0.0 },
+  { "month": "Apr", "Halfdan": 10.1, "Dan": 6.4, "Gorm": 4.2, "Tyra": 0.0 },
+  { "month": "May", "Halfdan": 10.2, "Dan": 6.6, "Gorm": 4.4, "Tyra": 1.1 },
+  { "month": "Jun", "Halfdan": 10.4, "Dan": 6.8, "Gorm": 4.6, "Tyra": 2.0 }
+]

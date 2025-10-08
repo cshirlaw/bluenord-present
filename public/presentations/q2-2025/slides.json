@@ -1,0 +1,4 @@
+[
+  { "id": "intro", "type": "text", "title": "Highlights", "md": "Revenue up **12%** year on year." },
+  { "id": "chart", "type": "chart", "title": "Production by Field", "chart": "prod-by-field" }
+]

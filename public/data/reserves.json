@@ -1,0 +1,8 @@
+{
+  "totalMmboe": 221,
+  "asOf": "31 Dec 2023",
+  "breakdown": [
+    { "label": "2P (proved + probable)", "value": 221 },
+    { "label": "2C (near-term)", "value": 0, "notes": ["Adda", "Halfdan North", "Svend reinstatement"] }
+  ]
+}

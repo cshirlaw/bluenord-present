@@ -1,0 +1,8 @@
+{
+  "prod-by-field": [
+    { "name": "Tyra", "boe": 21.3 },
+    { "name": "Halfdan", "boe": 18.9 },
+    { "name": "Gorm", "boe": 12.1 },
+    { "name": "Dan", "boe": 9.7 }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "asOf": "September 2025",
+  "summary": {
+    "oilPct": { "y2025": 54, "y2026": 42, "y2027": 25 },
+    "gasPct": { "y2025": 61, "y2026": 42, "y2027": 13 },
+    "footnotes": [
+      "Based on production guidance for 2025 including Tyra.",
+      "Spot price as at 08 September 2025.",
+      "Hedges include both swaps and options (as of 8 Sep 2025 forward curve)."
+    ]
+  },
+  "oil": {
+    "unitVolume": "mmbbl",
+    "unitPrice": "$/bbl",
+    "spot": 66.4,
+    "quarterly": [
+      { "bucket": "Q3-25", "volume": 1.20, "price": 73.4 },
+      { "bucket": "Q4-25", "volume": 1.28, "price": 72.8 },
+      { "bucket": "Q1-26", "volume": 1.11, "price": 69.7 },
+      { "bucket": "Q2-26", "volume": 1.11, "price": 69.6 },
+      { "bucket": "Q3-26", "volume": 0.87, "price": 66.7 },
+      { "bucket": "Q4-26", "volume": 0.87, "price": 66.8 },
+      { "bucket": "Q1-27", "volume": 0.72, "price": 65.6 },
+      { "bucket": "Q2-27", "volume": 0.72, "price": 65.7 },
+      { "bucket": "Q3-27", "volume": 0.35, "price": 65.8 },
+      { "bucket": "Q4-27", "volume": 0.35, "price": 65.9 }
+    ],
+    "yearlyVolumes": [
+      { "year": "Q3–Q4 2025", "volume": 2.48 },
+      { "year": "2026", "volume": 3.96 },
+      { "year": "2027", "volume": 2.13 }
+    ],
+    "yearlyAvgPrices": [
+      { "year": "Q3–Q4 2025", "price": 73.1 },
+      { "year": "2026", "price": 68.4 },
+      { "year": "2027", "price": 65.7 }
+    ]
+  },
+  "gas": {
+    "unitVolume": "GWh",
+    "unitPrice": "€/MWh",
+    "spot": 33.0,
+    "quarterly": [
+      { "bucket": "Q3-25", "volume": 2.31, "price": 39.5 },
+      { "bucket": "Q4-25", "volume": 1.98, "price": 38.5 },
+      { "bucket": "Q1-26", "volume": 1.98, "price": 38.5 },
+      { "bucket": "Q2-26", "volume": 1.40, "price": 33.2 },
+      { "bucket": "Q3-26", "volume": 1.40, "price": 33.1 },
+      { "bucket": "Q4-26", "volume": 1.23, "price": 34.5 },
+      { "bucket": "Q1-27", "volume": 1.23, "price": 34.7 },
+      { "bucket": "Q2-27", "volume": 0.21, "price": 29.6 },
+      { "bucket": "Q3-27", "volume": 0.21, "price": 29.3 },
+      { "bucket": "Q4-27", "volume": 0.18, "price": 30.8 },
+      { "bucket": "Q1-28", "volume": 0.18, "price": 30.8 }
+    ],
+    "yearlyVolumes": [
+      { "year": "Q3 2025", "volume": 2.31 },
+      { "year": "Winter 25/26", "volume": 3.96 },
+      { "year": "Summer 26", "volume": 2.79 },
+      { "year": "Winter 26/27", "volume": 2.46 },
+      { "year": "Summer 27", "volume": 0.42 },
+      { "year": "Winter 27/28", "volume": 0.36 }
+    ],
+    "yearlyAvgPrices": [
+      { "year": "Q3 2025", "price": 39.5 },
+      { "year": "Winter 25/26", "price": 38.5 },
+      { "year": "Summer 26", "price": 33.2 },
+      { "year": "Winter 26/27", "price": 34.6 },
+      { "year": "Summer 27", "price": 29.4 },
+      { "year": "Winter 27/28", "price": 30.8 }
+    ]
+  }
+}

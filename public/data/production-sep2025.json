@@ -1,0 +1,12 @@
+{
+  "month": "Sep 2025",
+  "quarter": "Q3 2025",
+  "unit": "mboepd",
+  "hubs": [
+    { "hub": "Tyra",    "month": 22.0, "quarter": 18.9 },
+    { "hub": "Dan",     "month": 6.8,  "quarter": 6.9  },
+    { "hub": "Gorm",    "month": 4.0,  "quarter": 5.2  },
+    { "hub": "Halfdan", "month": 8.4,  "quarter": 8.1  }
+  ],
+  "totals": { "month": 41.2, "quarter": 39.1 }
+}
