@@ -41,7 +41,7 @@ export default function ChartRouter({
     case "opex-per-boe-q1q2":
       return <OpexPerBoeQ1Q2 />;
     case "guidance-vs-actuals":
-      return <GuidanceVsActuals />;
+  return <GuidanceVsActuals args={args} />;
     case "prod-by-field":
       return <ProdByField />;
     case "duc-ownership":

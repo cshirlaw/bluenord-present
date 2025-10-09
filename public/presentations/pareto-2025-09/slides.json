@@ -20,22 +20,7 @@
     "title": "Strategy in One Line",
     "md": "**Cash-focused, low-cost volumes; hedged price floors; Tyra ramp stabilising; disciplined capex.**"
   },
-
-  {
-    "id": "prod-by-hub-q1q2-img",
-    "section": "Production",
-    "type": "image",
-    "title": "Production by hub — Q1 vs Q2 2025",
-    "src": "/presentations/pareto-2025-09/production-by-hub-q1q2.png"
-  },
-  {
-    "id": "guidance-vs-actuals-img",
-    "section": "Production",
-    "type": "image",
-    "title": "Guidance vs actuals (production trajectory)",
-    "src": "/presentations/pareto-2025-09/guidance-vs-actuals.png"
-  },
-
+  
   {
     "id": "guidance-note",
     "section": "Q2 Overview",
@@ -55,7 +40,6 @@
     "title": "Context",
     "md": "Lower unit costs expected as Tyra stabilises; infill well program staged to preserve flexibility."
   },
-
   {
     "id": "about",
     "section": "Company",
@@ -82,7 +66,6 @@
       { "label": "Cost discipline", "value": "$30.3/boe (Q2)", "footnote": "Target: lower with Tyra steady-state" }
     ]
   },
-
   {
     "id": "hedge-and-cost-snapshot",
     "section": "Hedging",
@@ -95,7 +78,6 @@
       { "label": "Liquidity", "value": "$718m", "footnote": "Cash $448m · RBL $270m" }
     ]
   },
-
   {
     "id": "hedge-coverage-oil-vs-gas",
     "section": "Hedging",
@@ -174,7 +156,6 @@
       ]
     }
   },
-
   {
     "id": "tyra",
     "section": "Production",
@@ -191,7 +172,6 @@
       "note": "**Operator update:** Reliability study completed; remedial actions scheduled for **Q3–Q4 2025** to stabilise process controls, improve uptime and reach ~30 mboepd net plateau."
     }
   },
-
   {
     "id": "hedge-portfolio",
     "section": "Hedging",
@@ -293,7 +273,6 @@
       ]
     }
   },
-
   {
     "id": "production-sep2025",
     "section": "Production",
@@ -306,7 +285,32 @@
     "section": "Production",
     "type": "chart",
     "title": "Production by Hub — Sep 2025 vs Q3 Avg",
-    "chart": "production-bars"
+    "chart": "production-by-hub-q1q2",
+    "args": {
+      "unit": "kboepd",
+      "colorA": "#0ea5e9",
+      "colorB": "#10b981",
+      "periods": [
+        {
+          "label": "Q3 Avg",
+          "hubs": [
+            { "name": "Dan", "value": 7.5 },
+            { "name": "Gorm", "value": 4.1 },
+            { "name": "Halfdan", "value": 9.6 },
+            { "name": "Tyra", "value": 22.0 }
+          ]
+        },
+        {
+          "label": "Sep 2025",
+          "hubs": [
+            { "name": "Dan", "value": 7.7 },
+            { "name": "Gorm", "value": 4.0 },
+            { "name": "Halfdan", "value": 9.4 },
+            { "name": "Tyra", "value": 21.1 }
+          ]
+        }
+      ]
+    }
   },
   {
     "id": "duc-ownership",
@@ -329,7 +333,6 @@
     "title": "Near-term Production Growth (Arrow View)",
     "chart": "prod-growth-arrow"
   },
-
   {
     "id": "production-capex-summary",
     "section": "Financials",
@@ -351,7 +354,6 @@
     "title": "Q2 2025 at a Glance (Section Marker)",
     "md": "Snapshot and charts for Q2 2025 performance."
   },
-
   {
     "id": "production-by-hub-q1q2-chart",
     "section": "Production",
@@ -367,13 +369,22 @@
     "chart": "oil-gas-mix-q1q2"
   },
   {
-    "id": "guidance-vs-actuals-2025-chart",
-    "section": "Production",
-    "type": "chart",
-    "title": "Production Guidance vs Actuals (2025)",
-    "chart": "guidance-vs-actuals"
-  },
-
+  "id": "guidance-vs-actuals-2025-chart",
+  "section": "Production",
+  "type": "chart",
+  "title": "Production Guidance vs Actuals (2025)",
+  "navTitle": "Production Growth",
+  "chart": "guidance-vs-actuals",
+  "args": {
+    "unit": "mboepd",
+    "series": [
+      { "label": "Q1 2025", "actual": 34.5 },
+      { "label": "Q2 2025", "actual": 37.8 },
+      { "label": "Q3 2025", "guidanceLow": 43, "guidanceHigh": 49 },
+      { "label": "Q4 2025", "guidanceLow": 47, "guidanceHigh": 53 }
+    ]
+  }
+},
   {
     "id": "q2-summary",
     "section": "Financials",
