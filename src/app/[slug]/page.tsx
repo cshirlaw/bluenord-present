@@ -1,30 +1,39 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+/**
+ * NOTE: SectionNav2 must accept:
+ *   - props.activeSection: string
+ *   - props.onSectionChange: (section: string) => void
+ * If your current SectionNav2 doesn't, add those two props and call onSectionChange when a tab is clicked.
+ */
+
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Card, Container, Prose } from "@/components/ui";
-import SectionNav2 from "@/components/SectionNav2"; // grouped nav (tabs + pills)
 import DownloadButton from "@/components/DownloadButton";
 import ProfilesGrid from "@/components/ProfilesGrid";
 import ChartRouter from "@/components/ChartRouter";
+import SectionNav2 from "@/components/SectionNav2";
 import { motion } from "framer-motion";
 
-/* ----------------------------
-   Types
----------------------------- */
-type BaseSlide = {
+/* ---------------- Types ---------------- */
+type SlideBase = {
   id: string;
-  section?: string; // <-- optional section name for grouped nav
   title: string;
+  section?: string; // <- drives grouping
 };
 
-type SlideText = BaseSlide & { type: "text"; md: string };
-type SlideChart = BaseSlide & { type: "chart"; chart: string; args?: Record<string, unknown> };
-type SlideVideo = BaseSlide & { type: "video"; src: string };
-type SlideDownload = BaseSlide & { type: "download"; href: string };
-type SlideImage = BaseSlide & { type: "image"; src: string; caption?: string };
-type SlideProfiles = BaseSlide & {
+type SlideText = SlideBase & { type: "text"; md: string };
+type SlideChart = SlideBase & {
+  type: "chart";
+  chart: string;
+  args?: Record<string, unknown>;
+};
+type SlideVideo = SlideBase & { type: "video"; src: string };
+type SlideDownload = SlideBase & { type: "download"; href: string };
+type SlideImage = SlideBase & { type: "image"; src: string; caption?: string };
+type SlideProfiles = SlideBase & {
   type: "profiles";
   people: {
     name: string;
@@ -35,7 +44,7 @@ type SlideProfiles = BaseSlide & {
     link?: string;
   }[];
 };
-type SlideStats = BaseSlide & {
+type SlideStats = SlideBase & {
   type: "stats";
   items: { label: string; value: string; footnote?: string }[];
 };
@@ -49,12 +58,21 @@ type SlideItem =
   | SlideProfiles
   | SlideStats;
 
-// Runtime shape with unique DOM id
 type SlideWithDom = SlideItem & { __domId: string };
 
-/* ----------------------------
-   Helpers
----------------------------- */
+type SectionItem = { id: string; title: string; __domId: string };
+type Group = { section: string; slides: SectionItem[] };
+
+/* ---------------- Type guards ---------------- */
+const isText = (s: SlideItem): s is SlideText => s.type === "text";
+const isStats = (s: SlideItem): s is SlideStats => s.type === "stats";
+const isChart = (s: SlideItem): s is SlideChart => s.type === "chart";
+const isVideo = (s: SlideItem): s is SlideVideo => s.type === "video";
+const isImage = (s: SlideItem): s is SlideImage => s.type === "image";
+const isProfiles = (s: SlideItem): s is SlideProfiles => s.type === "profiles";
+const isDownload = (s: SlideItem): s is SlideDownload => s.type === "download";
+
+/* ---------------- Helpers ---------------- */
 function makeUniqueIds<T extends { id: string }>(arr: T[]): (T & { __domId: string })[] {
   const seen = new Map<string, number>();
   return arr.map((s, idx) => {
@@ -66,27 +84,20 @@ function makeUniqueIds<T extends { id: string }>(arr: T[]): (T & { __domId: stri
   });
 }
 
-/* ----------------------------
-   Page
----------------------------- */
 export default function PresentationPage() {
   const router = useRouter();
   const params = useParams();
 
-  // slug from route params
+  // Slug normalization
   const rawSlug = (params as Record<string, string | string[] | undefined>)?.slug;
   const slug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug || "";
-
-  // normalize (strip trailing slashes/dots)
   const cleanSlug = slug.toString().trim().replace(/\/+$/g, "").replace(/\.+$/g, "");
 
-  // auto-correct URL if needed
   useEffect(() => {
-    if (slug && slug !== cleanSlug) {
-      router.replace(`/${encodeURIComponent(cleanSlug)}`);
-    }
+    if (slug && slug !== cleanSlug) router.replace(`/${encodeURIComponent(cleanSlug)}`);
   }, [slug, cleanSlug, router]);
 
+  // Data state
   const [slides, setSlides] = useState<SlideItem[]>([]);
   const [ready, setReady] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -122,71 +133,77 @@ export default function PresentationPage() {
     })();
   }, [cleanSlug, slug]);
 
-  // assign unique DOM ids
-  const slidesWithIds = useMemo<SlideWithDom[]>(() => makeUniqueIds(slides), [slides]);
+  // Unique ids & groups
+  const slidesWithIds = useMemo<SlideWithDom[]>(
+    () => makeUniqueIds(slides),
+    [slides]
+  );
 
-  // group slides by section (in insertion order)
-  const groups = useMemo(() => {
-    const map = new Map<
-      string,
-      { section: string; slides: { id: string; title: string; __domId: string }[] }
-    >();
-    for (const s of slidesWithIds) {
-      const sec = (s.section || "General").trim();
-      if (!map.has(sec)) map.set(sec, { section: sec, slides: [] });
-      map.get(sec)!.slides.push({ id: s.id, title: s.title, __domId: s.__domId });
-    }
-    return Array.from(map.values());
+  // Build groups directly from slide.section (default to "General")
+  const groups = useMemo<Group[]>(() => {
+    const by = new Map<string, SectionItem[]>();
+    slidesWithIds.forEach((s) => {
+      const section = s.section?.trim() || "General";
+      if (!by.has(section)) by.set(section, []);
+      by.get(section)!.push({ id: s.id, title: s.title, __domId: s.__domId });
+    });
+    // Preserve insertion order as they appear in slides.json
+    return Array.from(by.entries()).map(([section, items]) => ({ section, slides: items }));
   }, [slidesWithIds]);
 
-  // track which slide is currently near the top (for highlighting the pill)
-  const [activeDomId, setActiveDomId] = useState<string | null>(null);
+  // Active section = first defined section (or "General")
+  const [activeSection, setActiveSection] = useState<string>("General");
   useEffect(() => {
-    const els = slidesWithIds
-      .map((s) => document.getElementById(s.__domId))
-      .filter(Boolean) as HTMLElement[];
-    if (!els.length) return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const vis = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        const top = vis[0]?.target?.id;
-        if (top) setActiveDomId(top);
-      },
-      { rootMargin: "-80px 0px -60% 0px", threshold: [0, 0.1, 0.5] }
-    );
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, [slidesWithIds]);
+    if (groups.length > 0) {
+      setActiveSection(groups[0].section);
+    }
+  }, [groups]);
+
+  // Filter slides to active section only
+  const filteredSlides = useMemo<SlideWithDom[]>(
+    () =>
+      slidesWithIds.filter(
+        (s) => (s.section?.trim() || "General") === (activeSection || "General")
+      ),
+    [slidesWithIds, activeSection]
+  );
+
+  // For sub-pill navigation, we just show the titles from the filtered list
+  const subSectionItems = filteredSlides.map((s) => ({ id: s.__domId, title: s.title, __domId: s.__domId }));
 
   return (
     <Container>
-      {/* header */}
       <div className="mb-4 md:mb-6 flex items-center justify-between">
         <h1 className="text-xl md:text-3xl font-semibold tracking-tight">Presentation</h1>
       </div>
 
-      {/* load error */}
       {err && (
         <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           <div className="font-semibold mb-1">Could not load slides</div>
           <div>{err}</div>
           <div className="mt-2 text-red-600/80">
-            Tip: open{" "}
-            <code>/presentations/{cleanSlug || "your-slug"}/slides.json</code> directly in your
-            browser to verify the file exists.
+            Tip: open <code>/presentations/{cleanSlug || "your-slug"}/slides.json</code> directly.
           </div>
         </div>
       )}
 
-      {/* grouped nav (tabs + pills) */}
-      {groups.length > 0 && <SectionNav2 groups={groups} activeDomId={activeDomId} />}
+      {/* Section tabs + sub-pills */}
+      {groups.length > 0 && (
+        <div className="mb-4">
+          <SectionNav2
+            groups={groups}
+            activeDomId={undefined}
+            /* ⬇️ these two are important so the tab actually filters content */
+            activeSection={activeSection}
+            onSectionChange={setActiveSection}
+          />
+        </div>
+      )}
 
-      {/* slides */}
-      <div className="mt-5 space-y-6">
+      {/* Only render slides from the active section */}
+      <div className="mt-6 space-y-6">
         {ready &&
-          slidesWithIds.map((s, idx) => (
+          filteredSlides.map((s, idx) => (
             <motion.section
               key={s.__domId}
               id={s.__domId}
@@ -197,22 +214,15 @@ export default function PresentationPage() {
               className="scroll-mt-24"
             >
               <Card>
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl md:text-2xl font-semibold">{s.title}</h2>
-                  {s.section && (
-                    <div className="text-xs text-neutral-500">
-                      {s.section}
-                    </div>
-                  )}
-                </div>
+                <h2 className="text-xl md:text-2xl font-semibold">{s.title}</h2>
 
-                {s.type === "text" && (
+                {isText(s) && (
                   <Prose className="mt-3 prose prose-zinc max-w-none">
                     <p>{s.md}</p>
                   </Prose>
                 )}
 
-                {s.type === "stats" && (() => {
+                {isStats(s) && (() => {
                   const isHero = s.id === "q2-2025-at-a-glance";
                   return (
                     <div
@@ -253,9 +263,7 @@ export default function PresentationPage() {
                                 {kpi.value}
                               </div>
                               {kpi.footnote && (
-                                <div className="mt-1 text-xs text-neutral-500">
-                                  {kpi.footnote}
-                                </div>
+                                <div className="mt-1 text-xs text-neutral-500">{kpi.footnote}</div>
                               )}
                             </div>
                           ))}
@@ -265,13 +273,13 @@ export default function PresentationPage() {
                   );
                 })()}
 
-                {s.type === "chart" && (
+                {isChart(s) && (
                   <div className="mt-4">
                     <ChartRouter name={s.chart} args={s.args} />
                   </div>
                 )}
 
-                {s.type === "video" && (
+                {isVideo(s) && (
                   <div className="mt-4 aspect-video overflow-hidden rounded-xl">
                     <iframe
                       src={s.src}
@@ -282,7 +290,7 @@ export default function PresentationPage() {
                   </div>
                 )}
 
-                {s.type === "image" && (
+                {isImage(s) && (
                   <div className="mt-3">
                     <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-soft">
                       <img
@@ -296,19 +304,17 @@ export default function PresentationPage() {
                         }}
                       />
                     </div>
-                    {s.caption && (
-                      <p className="mt-2 text-sm text-neutral-600">{s.caption}</p>
-                    )}
+                    {s.caption && <p className="mt-2 text-sm text-neutral-600">{s.caption}</p>}
                   </div>
                 )}
 
-                {s.type === "profiles" && (
+                {isProfiles(s) && (
                   <div className="mt-3">
                     <ProfilesGrid people={s.people} />
                   </div>
                 )}
 
-                {s.type === "download" && (
+                {isDownload(s) && (
                   <div className="mt-4">
                     <DownloadButton href={s.href} />
                   </div>

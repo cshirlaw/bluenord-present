@@ -1,82 +1,124 @@
 "use client";
-import { useEffect, useState } from "react";
+
 import {
   ResponsiveContainer,
   BarChart,
   Bar,
   XAxis,
   YAxis,
-  Tooltip,
-  Legend,
   CartesianGrid,
+  Tooltip,
+  LabelList,
+  Legend,
+  Cell,
 } from "recharts";
+import { hubs } from "./palette";
 
-type Row = Record<string, string | number>; // e.g. { month: "Jan", Halfdan: 9.2, ... }
+type Row = {
+  field: "Tyra" | "Halfdan" | "Dan" | "Gorm" | (string & {});
+  mboepd: number; // average daily net production for the period
+};
 
-export default function ProdByField() {
-  const [data, setData] = useState<Row[] | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+type Props = {
+  // Optional: pass your own data via ChartRouter args if needed
+  data?: Row[];
+  // Optional axis max override
+  ymax?: number;
+  // Optional subtitle under the chart
+  caption?: string;
+};
 
-  useEffect(() => {
-    let isMounted = true;
-    (async () => {
-      try {
-        setErr(null);
-        const res = await fetch("/data/prod-by-field.json", { cache: "no-store" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = (await res.json()) as Row[];
-        if (!Array.isArray(json)) throw new Error("Expected an array");
-        if (isMounted) setData(json);
-      } catch (e: any) {
-        if (isMounted) setErr(e?.message || String(e));
-      }
-    })();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+// Default to Q2'25 snapshot (net to BN)
+const demoData: Row[] = [
+  { field: "Tyra",    mboepd: 16.8 },
+  { field: "Halfdan", mboepd: 10.6 },
+  { field: "Dan",     mboepd: 6.1  },
+  { field: "Gorm",    mboepd: 4.3  },
+];
 
-  if (err) {
-    return (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-        Failed to load chart data: {err}
-        <div className="mt-1 text-red-600/80">
-          Tip: open <code>/data/prod-by-field.json</code> in your browser and verify it’s valid JSON.
-        </div>
-      </div>
-    );
-  }
+const tooltipStyle: React.CSSProperties = {
+  borderRadius: 12,
+  border: "1px solid #e5e7eb",
+  boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+};
 
-  if (!data) {
-    return (
-      <div className="rounded-xl border border-neutral-200 p-6 text-sm text-neutral-500">
-        Loading chart…
-      </div>
-    );
-  }
+export default function ProdByField({ data, ymax, caption }: Props) {
+  const rows = (data?.length ? data : demoData).map((r) => ({
+    field: r.field,
+    mboepd: Number.isFinite(r.mboepd) ? r.mboepd : 0,
+  }));
 
-  // Infer series keys (all keys except the first categorical key, e.g. "month")
-  const keys = Object.keys(data[0] ?? {});
-  const categoryKey = "month"; // change if your category is named differently
-  const series = keys.filter((k) => k !== categoryKey);
+  const computedMax = Math.max(10, ...rows.map((r) => r.mboepd));
+  const yMax = ymax ?? Math.ceil((computedMax + 3) / 5) * 5; // round to nice step
 
   return (
-    <div className="rounded-xl border border-neutral-200 p-4 bg-white">
-      <div className="mb-3 text-sm text-neutral-600">Net production by field (kboe/d)</div>
-      <div className="h-[320px] w-full">
-        <ResponsiveContainer>
-          <BarChart data={data} margin={{ top: 4, right: 8, left: 8, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey={categoryKey} />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {series.map((k) => (
-              <Bar key={k} dataKey={k} stackId="a" />
-            ))}
+    <div className="w-full">
+      <div className="h-[300px] md:h-[360px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={rows}
+            margin={{ top: 8, right: 16, bottom: 8, left: 8 }}
+            barCategoryGap={18}
+          >
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis
+              dataKey="field"
+              tickLine={false}
+              axisLine={false}
+              tick={{ fill: "#334155", fontSize: 12 }}
+            />
+            <YAxis
+              domain={[0, yMax]}
+              tickCount={6}
+              tickLine={false}
+              axisLine={false}
+              tick={{ fill: "#334155", fontSize: 12 }}
+              width={48}
+              label={{
+                value: "mboepd (net)",
+                angle: -90,
+                position: "insideLeft",
+                fill: "#64748B",
+              }}
+            />
+            <Tooltip
+              wrapperStyle={tooltipStyle}
+              contentStyle={{ border: "none", borderRadius: 12 }}
+              labelStyle={{ color: "#0f172a", fontWeight: 600 }}
+              formatter={(val: any, name: string) => [
+                `${Number(val).toFixed(1)} mboepd`,
+                "Production",
+              ]}
+            />
+            <Legend
+              verticalAlign="top"
+              height={24}
+              iconType="circle"
+              formatter={() => "Production by field"}
+            />
+
+            <Bar dataKey="mboepd" name="Production" radius={[10, 10, 0, 0]}>
+              {rows.map((r, i) => (
+                <Cell key={i} fill={hubs[r.field as keyof typeof hubs] ?? "#64748B"} />
+              ))}
+              <LabelList
+                dataKey="mboepd"
+                position="top"
+                formatter={(v: number) => v.toFixed(1)}
+                className="text-sm"
+              />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
+
+      {caption ? (
+        <div className="mt-2 text-xs text-neutral-500">{caption}</div>
+      ) : (
+        <div className="mt-2 text-xs text-neutral-500">
+          Average daily production (net to BlueNord). Each hub uses a distinct brand colour.
+        </div>
+      )}
     </div>
   );
 }
