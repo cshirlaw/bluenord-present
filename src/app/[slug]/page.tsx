@@ -2,10 +2,9 @@
 "use client";
 
 /**
- * NOTE: SectionNav2 must accept:
- *   - props.activeSection: string
- *   - props.onSectionChange: (section: string) => void
- * If your current SectionNav2 doesn't, add those two props and call onSectionChange when a tab is clicked.
+ * This page:
+ *  - Orders section tabs by SECTION_ORDER (fallback = discovery order)
+ *  - Uses optional `navTitle` (from slides.json) for the small sub-pills
  */
 
 import { useEffect, useMemo, useState } from "react";
@@ -17,11 +16,24 @@ import ChartRouter from "@/components/ChartRouter";
 import SectionNav2 from "@/components/SectionNav2";
 import { motion } from "framer-motion";
 
+/* ---------------- Config: desired tab order ---------------- */
+const SECTION_ORDER = [
+  "Company",
+  "People",
+  "Strategy",
+  "Production",
+  "Hedging",
+  "Financials",
+  "Q2 Overview",
+  "General",
+];
+
 /* ---------------- Types ---------------- */
 type SlideBase = {
   id: string;
   title: string;
-  section?: string; // <- drives grouping
+  section?: string;      // drives grouping
+  navTitle?: string;     // optional short label used in sub-pills
 };
 
 type SlideText = SlideBase & { type: "text"; md: string };
@@ -133,30 +145,41 @@ export default function PresentationPage() {
     })();
   }, [cleanSlug, slug]);
 
-  // Unique ids & groups
-  const slidesWithIds = useMemo<SlideWithDom[]>(
-    () => makeUniqueIds(slides),
-    [slides]
-  );
+  // Unique ids
+  const slidesWithIds = useMemo<SlideWithDom[]>(() => makeUniqueIds(slides), [slides]);
 
-  // Build groups directly from slide.section (default to "General")
+  // Build groups from slide.section, then sort by SECTION_ORDER
   const groups = useMemo<Group[]>(() => {
     const by = new Map<string, SectionItem[]>();
+    const seenOrder: string[] = [];
+
     slidesWithIds.forEach((s) => {
       const section = s.section?.trim() || "General";
-      if (!by.has(section)) by.set(section, []);
-      by.get(section)!.push({ id: s.id, title: s.title, __domId: s.__domId });
+      if (!by.has(section)) {
+        by.set(section, []);
+        seenOrder.push(section);
+      }
+      by.get(section)!.push({
+        id: s.id,
+        title: s.navTitle ?? s.title, // 👈 use short label if provided
+        __domId: s.__domId,
+      });
     });
-    // Preserve insertion order as they appear in slides.json
-    return Array.from(by.entries()).map(([section, items]) => ({ section, slides: items }));
+
+    const orderIndex = (name: string) => {
+      const i = SECTION_ORDER.indexOf(name);
+      return i === -1 ? 1000 + seenOrder.indexOf(name) : i;
+    };
+
+    return Array.from(by.entries())
+      .sort((a, b) => orderIndex(a[0]) - orderIndex(b[0]))
+      .map(([section, items]) => ({ section, slides: items }));
   }, [slidesWithIds]);
 
-  // Active section = first defined section (or "General")
+  // Active section = first section in our sorted groups
   const [activeSection, setActiveSection] = useState<string>("General");
   useEffect(() => {
-    if (groups.length > 0) {
-      setActiveSection(groups[0].section);
-    }
+    if (groups.length > 0) setActiveSection(groups[0].section);
   }, [groups]);
 
   // Filter slides to active section only
@@ -167,9 +190,6 @@ export default function PresentationPage() {
       ),
     [slidesWithIds, activeSection]
   );
-
-  // For sub-pill navigation, we just show the titles from the filtered list
-  const subSectionItems = filteredSlides.map((s) => ({ id: s.__domId, title: s.title, __domId: s.__domId }));
 
   return (
     <Container>
@@ -193,9 +213,8 @@ export default function PresentationPage() {
           <SectionNav2
             groups={groups}
             activeDomId={undefined}
-            /* ⬇️ these two are important so the tab actually filters content */
-            activeSection={activeSection}
-            onSectionChange={setActiveSection}
+            activeSection={activeSection}           // 👈 controlled tab
+            onSectionChange={setActiveSection}      // 👈 controlled tab
           />
         </div>
       )}

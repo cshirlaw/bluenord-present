@@ -249,6 +249,7 @@
     "section": "Hedging",
     "type": "chart",
     "title": "Expected Turnover & EBITDA — Hedged vs Unhedged (Q3’25–Q4’26)",
+    "navTitle": "Turnover & EBITDA (’25–’26)",
     "chart": "hedge-bridge",
     "args": {
       "mwh_to_boe": 0.171,
