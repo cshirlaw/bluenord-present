@@ -26,20 +26,7 @@
     "title": "Production by hub — Q1 vs Q2 2025",
     "src": "/presentations/pareto-2025-09/production-by-hub-q1q2.png"
   },
-  {
-    "id": "oil-gas-mix-q1q2-img",
-    "section": "Production",
-    "type": "image",
-    "title": "Oil vs gas mix — Q1 vs Q2 2025",
-    "src": "/presentations/pareto-2025-09/oil-gas-mix-q1q2.png"
-  },
-  {
-    "id": "opex-per-boe-q1q2-img",
-    "section": "Operating",
-    "type": "image",
-    "title": "Opex per boe — Q1 vs Q2 2025",
-    "src": "/presentations/pareto-2025-09/opex-per-boe-q1q2.png"
-  },
+  
   {
     "id": "guidance-vs-actuals-img",
     "section": "Production",
@@ -258,13 +245,7 @@
     "title": "Substantial Reserves (with breakdown)",
     "chart": "reserves-card"
   },
-  {
-    "id": "prod-goal",
-    "section": "Production",
-    "type": "chart",
-    "title": "Near-term Production Growth",
-    "chart": "prod-goal"
-  },
+  
   {
     "id": "prod-growth-arrow",
     "section": "Production",
@@ -321,13 +302,7 @@
     "title": "Production Guidance vs Actuals (2025)",
     "chart": "guidance-vs-actuals"
   },
-  {
-    "id": "opex-per-boe-q1q2-chart",
-    "section": "Financials",
-    "type": "chart",
-    "title": "Production Cost per boe — Q1 vs Q2 2025",
-    "chart": "opex-per-boe-q1q2"
-  },
+  
   {
     "id": "q2-summary",
     "section": "Financials",
