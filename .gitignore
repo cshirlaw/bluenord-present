@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# stray files from shell paste accidents
+bluenord-present@0.1.0
+node
