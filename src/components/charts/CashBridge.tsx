@@ -1,3 +1,0 @@
-const CashBridge = dynamic(() => import("@/components/charts/CashBridge"), { ssr: false });
-// ...
-case "cash-bridge": return <CashBridge />;
