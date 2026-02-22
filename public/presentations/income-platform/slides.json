@@ -1,0 +1,38 @@
+[
+  {
+    "id": "thesis",
+    "type": "text",
+    "title": "Income Platform — Investment Thesis",
+    "md": "BlueNord operates a producing asset base designed to generate consistent cash flow and distribute 50–70% of net operating cash flow to shareholders on a quarterly basis."
+  },
+  {
+    "id": "production",
+    "type": "text",
+    "title": "Production & Asset Base",
+    "md": "Production profile, reserve life, and cost structure form the foundation of the income platform."
+  },
+  {
+    "id": "cash-engine",
+    "type": "text",
+    "title": "Cash Flow Engine",
+    "md": "Revenue – Operating Costs = Net Operating Cash Flow → 50–70% distributed quarterly."
+  },
+  {
+    "id": "dividend-framework",
+    "type": "text",
+    "title": "Dividend Framework",
+    "md": "Formal board commitment to distribute 50–70% of net operating cash flow."
+  },
+  {
+    "id": "hedging",
+    "type": "text",
+    "title": "Hedging & Protection",
+    "md": "Structured hedging and disciplined balance sheet management provide downside protection."
+  },
+  {
+    "id": "sensitivity",
+    "type": "text",
+    "title": "Sensitivity & Resilience",
+    "md": "Dividend and coverage sensitivity to oil and gas price scenarios."
+  }
+]
