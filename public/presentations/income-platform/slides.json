@@ -24,15 +24,15 @@
     "md": "Formal board commitment to distribute 50–70% of net operating cash flow."
   },
   {
-    "id": "hedging",
-    "type": "text",
-    "title": "Hedging & Protection",
-    "md": "Structured hedging and disciplined balance sheet management provide downside protection."
-  },
-  {
     "id": "sensitivity",
     "type": "text",
     "title": "Sensitivity & Resilience",
     "md": "Dividend and coverage sensitivity to oil and gas price scenarios."
+  },
+  {
+    "id": "hedging",
+    "type": "text",
+    "title": "Hedging & Protection",
+    "md": "Structured hedging and disciplined balance sheet management provide downside protection."
   }
 ]
