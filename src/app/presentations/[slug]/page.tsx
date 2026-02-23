@@ -1,18 +1,22 @@
 import { notFound } from "next/navigation";
-import fs from "node:fs";
-import path from "node:path";
 import PresentationClient from "@/components/PresentationClient";
+import manifest from "../../../../public/presentations/manifest.json";
 
-function slidesJsonExists(slug: string): boolean {
-  const p = path.join(process.cwd(), "public", "presentations", slug, "slides.json");
-  return fs.existsSync(p);
+type ManifestItem = { slug: string };
+
+function allowedSlugs(): Set<string> {
+  const items = (manifest as ManifestItem[]) || [];
+  return new Set(items.map((i) => i.slug).filter(Boolean));
 }
 
-export default function PresentationPage({ params }: { params: { slug: string } }) {
-  const slug = params?.slug;
+export default async function PresentationPage({ params }: { params: unknown }) {
+  const resolved = await Promise.resolve(params as any);
+  const slug = resolved?.slug;
 
   if (typeof slug !== "string" || slug.length === 0) notFound();
-  if (!slidesJsonExists(slug)) notFound();
+
+  const allowed = allowedSlugs();
+  if (!allowed.has(slug)) notFound();
 
   return <PresentationClient slug={slug} />;
 }
