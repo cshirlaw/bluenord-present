@@ -43,3 +43,7 @@ next-env.d.ts
 # stray files from shell paste accidents
 bluenord-present@0.1.0
 node
+
+# Local run artefacts
+.start-3005.log
+next
