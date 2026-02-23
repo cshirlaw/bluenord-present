@@ -296,8 +296,35 @@ export default function PresentationClient({ slug }: { slug: string }) {
       )}
 
       {!activeDomId && (
-        <div className="rounded-xl border bg-white p-4 text-sm text-zinc-700">
-          Select a slide from the index above.
+        <div className="space-y-4">
+          <div className="rounded-xl border bg-white p-4 text-sm text-zinc-700">
+            Select a slide from the index above.
+          </div>
+
+          <div className="rounded-xl border bg-white p-4">
+            <div className="text-sm font-medium text-zinc-800">Slide index</div>
+            <div className="mt-3 space-y-4">
+              {groups.map((g) => (
+                <div key={g.section}>
+                  <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                    {g.section}
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {g.slides.map((it) => (
+                      <button
+                        key={it.__domId}
+                        type="button"
+                        className="rounded-full border bg-white px-3 py-1.5 text-sm text-zinc-800 hover:bg-zinc-50"
+                        onClick={() => goTo(it.__domId)}
+                      >
+                        {it.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
