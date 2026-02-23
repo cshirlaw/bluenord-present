@@ -230,19 +230,7 @@ export default function PresentationClient({ slug }: { slug: string }) {
     const onHash = () => applyFromHash();
     window.addEventListener("hashchange", onHash);
   
-  const __dedupeIndexSlides = (items: { __domId: string; title: string }[]) => {
-    const seen = new Set<string>();
-    const out: { __domId: string; title: string }[] = [];
-    for (const it of items) {
-      const k = (it.title || "").trim().toLowerCase();
-      if (!k) continue;
-      if (seen.has(k)) continue;
-      seen.add(k);
-      out.push(it);
-    }
-    return out;
-  };
-
+  
   return () => window.removeEventListener("hashchange", onHash);
   }, [ready, slidesWithIds, domIdToSection]);
 
