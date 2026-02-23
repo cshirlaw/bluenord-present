@@ -67,7 +67,7 @@
   {
     "id": "chart-oil-gas-mix",
     "type": "chart",
-    "title": "Chart: Oil / gas mix (Q1–Q2)",
+    "title": "Chart: Oil / gas mix (Q1–Q3)",
     "navTitle": "Oil/gas mix",
     "section": "Production",
     "chart": "oil-gas-mix-q1q2"
