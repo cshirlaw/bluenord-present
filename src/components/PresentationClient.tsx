@@ -86,12 +86,19 @@ function makeUniqueIds<T extends { id: string }>(arr: T[]): (T & { __domId: stri
   });
 }
 
+function scrollToDomId(domId: string) {
+  const el = document.getElementById(domId);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+  history.replaceState(null, "", `#${encodeURIComponent(domId)}`);
+}
+
 export default function PresentationClient({ slug }: { slug: string }) {
   const router = useRouter();
   const cleanSlug = slug.toString().trim().replace(/\/+$/g, "").replace(/\.+$/g, "");
 
   useEffect(() => {
-    if (slug && slug !== cleanSlug) router.replace(`/${encodeURIComponent(cleanSlug)}`);
+    if (slug && slug !== cleanSlug) router.replace(`/presentations/${encodeURIComponent(cleanSlug)}`);
   }, [slug, cleanSlug, router]);
 
   const [slides, setSlides] = useState<SlideItem[]>([]);
@@ -171,6 +178,58 @@ export default function PresentationClient({ slug }: { slug: string }) {
     [slidesWithIds, activeSection]
   );
 
+  const [activeDomId, setActiveDomId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!ready) return;
+
+    const hash = (typeof window !== "undefined" ? window.location.hash : "").replace(/^#/, "");
+    const decoded = hash ? decodeURIComponent(hash) : "";
+    if (decoded && filteredSlides.some((s) => s.__domId === decoded)) {
+      setActiveDomId(decoded);
+      setTimeout(() => scrollToDomId(decoded), 50);
+      return;
+    }
+
+    if (filteredSlides.length > 0) setActiveDomId(filteredSlides[0].__domId);
+  }, [ready, filteredSlides]);
+
+  useEffect(() => {
+    if (!ready) return;
+    if (filteredSlides.length === 0) return;
+
+    const els = filteredSlides
+      .map((s) => document.getElementById(s.__domId))
+      .filter(Boolean) as HTMLElement[];
+
+    if (els.length === 0) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
+        const id = visible?.target?.id;
+        if (id) setActiveDomId(id);
+      },
+      { root: null, rootMargin: "0px 0px -55% 0px", threshold: [0.15, 0.3, 0.5, 0.7] }
+    );
+
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [ready, filteredSlides]);
+
+  const navIndex = useMemo(() => {
+    if (!activeDomId) return -1;
+    return filteredSlides.findIndex((s) => s.__domId === activeDomId);
+  }, [filteredSlides, activeDomId]);
+
+  const hasPrev = navIndex > 0;
+  const hasNext = navIndex >= 0 && navIndex < filteredSlides.length - 1;
+
+  const prevId = hasPrev ? filteredSlides[navIndex - 1].__domId : null;
+  const nextId = hasNext ? filteredSlides[navIndex + 1].__domId : null;
+
   return (
     <Container>
       <div className="mb-4 md:mb-6 flex items-center justify-between">
@@ -191,14 +250,14 @@ export default function PresentationClient({ slug }: { slug: string }) {
         <div className="mb-4">
           <SectionNav2
             groups={groups}
-            activeDomId={undefined}
+            activeDomId={activeDomId ?? undefined}
             activeSection={activeSection}
             onSectionChange={setActiveSection}
           />
         </div>
       )}
 
-      <div className="space-y-4 md:space-y-6">
+      <div className="space-y-4 md:space-y-6 pb-20">
         {filteredSlides.map((s) => (
           <motion.div
             key={s.__domId}
@@ -235,11 +294,7 @@ export default function PresentationClient({ slug }: { slug: string }) {
 
               {isImage(s) && (
                 <div>
-                  <img
-                    src={s.src}
-                    alt={s.title}
-                    className="w-full rounded-xl border bg-white"
-                  />
+                  <img src={s.src} alt={s.title} className="w-full rounded-xl border bg-white" />
                   {s.caption && <div className="mt-2 text-sm text-zinc-600">{s.caption}</div>}
                 </div>
               )}
@@ -257,14 +312,42 @@ export default function PresentationClient({ slug }: { slug: string }) {
               )}
 
               {isProfiles(s) && <ProfilesGrid people={s.people} />}
-
-              {ready === false && slides.length === 0 && !err && (
-                <div className="text-sm text-zinc-500">Loading…</div>
-              )}
             </Card>
           </motion.div>
         ))}
       </div>
+
+      {filteredSlides.length > 0 && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur">
+          <div className="mx-auto max-w-6xl px-4 md:px-6 py-2 flex items-center justify-between gap-2">
+            <button
+              type="button"
+              className="rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
+              disabled={!prevId}
+              onClick={() => prevId && scrollToDomId(prevId)}
+            >
+              Previous
+            </button>
+
+            <button
+              type="button"
+              className="rounded-lg border px-3 py-2 text-sm"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            >
+              Back to index
+            </button>
+
+            <button
+              type="button"
+              className="rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
+              disabled={!nextId}
+              onClick={() => nextId && scrollToDomId(nextId)}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </Container>
   );
 }
