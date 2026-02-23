@@ -312,7 +312,7 @@ export default function PresentationClient({ slug }: { slug: string }) {
                     {g.section}
                   </div>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {__dedupeIndexSlides(g.slides).map((it) => (
+                    {g.slides.map((it) => (
                       <button
                         key={it.__domId}
                         type="button"
