@@ -1,6 +1,6 @@
-import fs from "node:fs";
-import path from "node:path";
 import { notFound, redirect } from "next/navigation";
+import path from "node:path";
+import fs from "node:fs";
 
 type ManifestItem = { slug?: unknown };
 
@@ -21,14 +21,13 @@ function readManifestSlugs(): Set<string> {
     return new Set();
   }
 
-  if (Array.isArray(data)) {
-    const slugs = data
-      .map((x) => (x as ManifestItem)?.slug)
-      .filter((s): s is string => typeof s === "string" && s.length > 0);
-    return new Set(slugs);
-  }
+  if (!Array.isArray(data)) return new Set();
 
-  return new Set();
+  const slugs = data
+    .map((x) => (x as ManifestItem)?.slug)
+    .filter((s): s is string => typeof s === "string" && s.length > 0);
+
+  return new Set(slugs);
 }
 
 export default function SlugPage({ params }: { params: { slug: string } }) {
