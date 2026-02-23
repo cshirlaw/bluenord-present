@@ -229,7 +229,21 @@ export default function PresentationClient({ slug }: { slug: string }) {
 
     const onHash = () => applyFromHash();
     window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
+  
+  const __dedupeIndexSlides = (items: { __domId: string; title: string }[]) => {
+    const seen = new Set<string>();
+    const out: { __domId: string; title: string }[] = [];
+    for (const it of items) {
+      const k = (it.title || "").trim().toLowerCase();
+      if (!k) continue;
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(it);
+    }
+    return out;
+  };
+
+  return () => window.removeEventListener("hashchange", onHash);
   }, [ready, slidesWithIds, domIdToSection]);
 
   useEffect(() => {
@@ -310,7 +324,7 @@ export default function PresentationClient({ slug }: { slug: string }) {
                     {g.section}
                   </div>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {g.slides.map((it) => (
+                    {__dedupeIndexSlides(g.slides).map((it) => (
                       <button
                         key={it.__domId}
                         type="button"
