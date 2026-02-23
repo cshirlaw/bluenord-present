@@ -73,7 +73,7 @@ const isDownload = (s: SlideItem): s is SlideDownload => s.type === "download";
 function makeUniqueIds<T extends { id: string }>(arr: T[]): (T & { __domId: string })[] {
   const seen = new Map<string, number>();
   return arr.map((s, idx) => {
-    const base = (s.id || `section-${idx}`).trim();
+    const base = (s.id || `slide-${idx}`).trim();
     const count = seen.get(base) ?? 0;
     seen.set(base, count + 1);
     const domId = count === 0 ? base : `${base}-${count + 1}`;
@@ -81,10 +81,15 @@ function makeUniqueIds<T extends { id: string }>(arr: T[]): (T & { __domId: stri
   });
 }
 
-function readHash(): string {
-  if (typeof window === "undefined") return "";
-  const raw = (window.location.hash || "").replace(/^#/, "");
-  if (!raw) return "";
+function scrollToDomId(domId: string) {
+  const el = document.getElementById(domId);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function getHashDomId(): string | null {
+  const raw = (typeof window !== "undefined" ? window.location.hash : "").replace(/^#/, "");
+  if (!raw) return null;
   try {
     return decodeURIComponent(raw);
   } catch {
@@ -92,20 +97,14 @@ function readHash(): string {
   }
 }
 
-function setHash(id: string) {
+function setHashDomId(domId: string | null) {
   if (typeof window === "undefined") return;
-  window.location.hash = encodeURIComponent(id);
-}
-
-function clearHash() {
-  if (typeof window === "undefined") return;
-  window.history.replaceState(null, "", window.location.pathname);
-}
-
-function scrollToDomId(id: string) {
-  const el = typeof document !== "undefined" ? document.getElementById(id) : null;
-  if (!el) return;
-  el.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (!domId) {
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    return;
+  }
+  const encoded = encodeURIComponent(domId);
+  window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#${encoded}`);
 }
 
 export default function PresentationClient({ slug }: { slug: string }) {
@@ -185,59 +184,77 @@ export default function PresentationClient({ slug }: { slug: string }) {
     if (groups.length > 0) setActiveSection(groups[0].section);
   }, [groups]);
 
+  const domIdToSection = useMemo(() => {
+    const m = new Map<string, string>();
+    slidesWithIds.forEach((s) => m.set(s.__domId, (s.section?.trim() || "General")));
+    return m;
+  }, [slidesWithIds]);
+
   const [activeDomId, setActiveDomId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!ready) return;
 
-    const applyHash = () => {
-      const decoded = readHash();
-
-      if (!decoded) {
+    const applyFromHash = () => {
+      const domId = getHashDomId();
+      if (!domId) {
         setActiveDomId(null);
         return;
       }
 
-      const found = slidesWithIds.find((s) => s.__domId === decoded);
-      if (!found) {
+      if (!slidesWithIds.some((s) => s.__domId === domId)) {
+        setHashDomId(null);
         setActiveDomId(null);
         return;
       }
 
-      const section = found.section?.trim() || "General";
-      setActiveSection(section);
-      setActiveDomId(found.__domId);
-      setTimeout(() => scrollToDomId(found.__domId), 30);
+      setActiveDomId(domId);
+      const sec = domIdToSection.get(domId);
+      if (sec) setActiveSection(sec);
     };
 
-    applyHash();
-    window.addEventListener("hashchange", applyHash);
-    return () => window.removeEventListener("hashchange", applyHash);
-  }, [ready, slidesWithIds]);
+    applyFromHash();
 
-  const filteredSlides = useMemo<SlideWithDom[]>(
-    () =>
-      slidesWithIds.filter(
-        (s) => (s.section?.trim() || "General") === (activeSection || "General")
-      ),
-    [slidesWithIds, activeSection]
-  );
+    const onHash = () => applyFromHash();
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [ready, slidesWithIds, domIdToSection]);
 
-  const activeSlide = useMemo<SlideWithDom | null>(() => {
+  useEffect(() => {
+    if (!ready) return;
+    if (!activeDomId) return;
+    setTimeout(() => scrollToDomId(activeDomId), 20);
+  }, [ready, activeDomId]);
+
+  const activeSlide = useMemo(() => {
     if (!activeDomId) return null;
-    return filteredSlides.find((s) => s.__domId === activeDomId) ?? null;
-  }, [filteredSlides, activeDomId]);
+    return slidesWithIds.find((s) => s.__domId === activeDomId) ?? null;
+  }, [slidesWithIds, activeDomId]);
 
   const navIndex = useMemo(() => {
     if (!activeDomId) return -1;
-    return filteredSlides.findIndex((s) => s.__domId === activeDomId);
-  }, [filteredSlides, activeDomId]);
+    return slidesWithIds.findIndex((s) => s.__domId === activeDomId);
+  }, [slidesWithIds, activeDomId]);
 
   const hasPrev = navIndex > 0;
-  const hasNext = navIndex >= 0 && navIndex < filteredSlides.length - 1;
+  const hasNext = navIndex >= 0 && navIndex < slidesWithIds.length - 1;
 
-  const prevId = hasPrev ? filteredSlides[navIndex - 1].__domId : null;
-  const nextId = hasNext ? filteredSlides[navIndex + 1].__domId : null;
+  const prevId = hasPrev ? slidesWithIds[navIndex - 1].__domId : null;
+  const nextId = hasNext ? slidesWithIds[navIndex + 1].__domId : null;
+
+  const goIndex = () => {
+    setHashDomId(null);
+    setActiveDomId(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const goTo = (domId: string | null) => {
+    if (!domId) return;
+    setHashDomId(domId);
+    setActiveDomId(domId);
+    const sec = domIdToSection.get(domId);
+    if (sec) setActiveSection(sec);
+  };
 
   return (
     <Container>
@@ -266,14 +283,14 @@ export default function PresentationClient({ slug }: { slug: string }) {
         </div>
       )}
 
-      {!activeSlide && (
+      {!activeDomId && (
         <div className="rounded-xl border bg-white p-4 text-sm text-zinc-700">
           Select a slide from the index above.
         </div>
       )}
 
       {activeSlide && (
-        <div className="pb-20">
+        <div className="space-y-4 md:space-y-6 pb-20">
           <motion.div
             key={activeSlide.__domId}
             id={activeSlide.__domId}
@@ -309,14 +326,8 @@ export default function PresentationClient({ slug }: { slug: string }) {
 
               {isImage(activeSlide) && (
                 <div>
-                  <img
-                    src={activeSlide.src}
-                    alt={activeSlide.title}
-                    className="w-full rounded-xl border bg-white"
-                  />
-                  {activeSlide.caption && (
-                    <div className="mt-2 text-sm text-zinc-600">{activeSlide.caption}</div>
-                  )}
+                  <img src={activeSlide.src} alt={activeSlide.title} className="w-full rounded-xl border bg-white" />
+                  {activeSlide.caption && <div className="mt-2 text-sm text-zinc-600">{activeSlide.caption}</div>}
                 </div>
               )}
 
@@ -338,39 +349,37 @@ export default function PresentationClient({ slug }: { slug: string }) {
         </div>
       )}
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur">
-        <div className="mx-auto max-w-6xl px-4 md:px-6 py-2 flex items-center justify-between gap-2">
-          <button
-            type="button"
-            className="rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
-            disabled={!prevId}
-            onClick={() => prevId && setHash(prevId)}
-          >
-            Previous
-          </button>
+      {slidesWithIds.length > 0 && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur">
+          <div className="mx-auto max-w-6xl px-4 md:px-6 py-2 flex items-center justify-between gap-2">
+            <button
+              type="button"
+              className="rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
+              disabled={!prevId}
+              onClick={() => goTo(prevId)}
+            >
+              Previous
+            </button>
 
-          <button
-            type="button"
-            className="rounded-lg border px-3 py-2 text-sm"
-            onClick={() => {
-              clearHash();
-              setActiveDomId(null);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-          >
-            Back to index
-          </button>
+            <button
+              type="button"
+              className="rounded-lg border px-3 py-2 text-sm"
+              onClick={goIndex}
+            >
+              Back to index
+            </button>
 
-          <button
-            type="button"
-            className="rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
-            disabled={!nextId}
-            onClick={() => nextId && setHash(nextId)}
-          >
-            Next
-          </button>
+            <button
+              type="button"
+              className="rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
+              disabled={!nextId}
+              onClick={() => goTo(nextId)}
+            >
+              Next
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </Container>
   );
 }
