@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 
 /* ========== Interactive charts (code-split) ========== */
 const ProductionByHubQ1Q2     = dynamic(() => import("@/components/charts/ProductionByHubQ1Q2"),     { ssr: false });
-const OilGasMixQ1Q2           = dynamic(() => import("@/components/charts/OilGasMixQ1Q2"),           { ssr: false });
+const OilGasMixQ1Q3           = dynamic(() => import("@/components/charts/OilGasMixQ1Q3"),           { ssr: false });
 const OpexPerBoeQ1Q2          = dynamic(() => import("@/components/charts/OpexPerBoeQ1Q2"),          { ssr: false });
 const GuidanceVsActuals       = dynamic(() => import("@/components/charts/GuidanceVsActuals"),       { ssr: false });
 const ProdByField             = dynamic(() => import("@/components/charts/ProdByField"),             { ssr: false });
@@ -36,8 +36,8 @@ export default function ChartRouter({
     /* ===== Data charts ===== */
     case "production-by-hub-q1q2":
       return <ProductionByHubQ1Q2 />;
-    case "oil-gas-mix-q1q2":
-      return <OilGasMixQ1Q2 />;
+    case "oil-gas-mix-q1q3":
+      return <OilGasMixQ1Q3 />;
     case "opex-per-boe-q1q2":
       return <OpexPerBoeQ1Q2 />;
     case "guidance-vs-actuals":

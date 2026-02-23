@@ -11,12 +11,13 @@ import { brand } from "./palette";
 const data = [
   { q: "Q1 2025", oil: 18.0, gas: 11.4, total: 29.4 },
   { q: "Q2 2025", oil: 23.5, gas: 15.0, total: 38.5 },
+  { q: "Q3 2025", oil: 23.5, gas: 15.0, total: 38.5 },
 ];
 
-export default function OilGasMixQ1Q2() {
+export default function OilGasMixQ1Q3() {
   return (
     <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-soft">
-      <div className="mb-2 text-sm text-neutral-600">Oil vs Gas mix — Q1/Q2 2025 (mboepd)</div>
+      <div className="mb-2 text-sm text-neutral-600">Oil vs Gas mix — Q1–Q3 2025 (mboepd)</div>
       <div className="h-72 w-full">
         <ResponsiveContainer>
           <BarChart data={data} margin={{ top: 8, right: 16, left: 4, bottom: 8 }}>
