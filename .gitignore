@@ -47,3 +47,7 @@ node
 # Local run artefacts
 .start-3005.log
 next
+
+# Local Next.js run logs (do not commit)
+.dev-*.log
+.start-*.log
