@@ -71,5 +71,13 @@
     "navTitle": "Oil/gas mix",
     "section": "Production",
     "chart": "oil-gas-mix-q1q3"
+  },
+  {
+    "id": "table-oil-gas-mix",
+    "type": "text",
+    "title": "Table: Oil / gas mix (underlying numbers)",
+    "navTitle": "Oil/gas mix table",
+    "section": "Production",
+    "md": "<div class=\"overflow-x-auto\"><table class=\"w-full text-sm border-collapse\"><thead><tr><th class=\"text-left border-b p-2\">Quarter</th><th class=\"text-left border-b p-2\">Oil (mboepd)</th><th class=\"text-left border-b p-2\">Gas (mboepd)</th><th class=\"text-left border-b p-2\">Total (mboepd)</th></tr></thead><tbody><tr><td class=\"border-b p-2\">Q1 2025</td><td class=\"border-b p-2\">18.0</td><td class=\"border-b p-2\">11.4</td><td class=\"border-b p-2\">29.4</td></tr><tr><td class=\"border-b p-2\">Q2 2025</td><td class=\"border-b p-2\">23.5</td><td class=\"border-b p-2\">15.0</td><td class=\"border-b p-2\">38.5</td></tr><tr><td class=\"border-b p-2\">Q3 2025</td><td class=\"border-b p-2\">23.5</td><td class=\"border-b p-2\">15.0</td><td class=\"border-b p-2\">38.5</td></tr></tbody></table></div><p class=\"mt-2 text-xs text-neutral-500\">Q3 values are placeholder (copy of Q2) until we load the real Q3 numbers.</p>"
   }
 ]
