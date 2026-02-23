@@ -49,6 +49,13 @@ type SlideStats = SlideBase & {
   items: { label: string; value: string; footnote?: string }[];
 };
 
+type SlideTable = SlideBase & {
+  type: "table";
+  columns: string[];
+  rows: (string | number)[][];
+  note?: string;
+};
+
 type SlideItem =
   | SlideText
   | SlideChart
@@ -56,7 +63,9 @@ type SlideItem =
   | SlideDownload
   | SlideImage
   | SlideProfiles
-  | SlideStats;
+  | SlideStats
+  | SlideTable;
+;
 
 type SlideWithDom = SlideItem & { __domId: string };
 type SectionItem = { id: string; title: string; __domId: string };
@@ -69,6 +78,7 @@ const isVideo = (s: SlideItem): s is SlideVideo => s.type === "video";
 const isImage = (s: SlideItem): s is SlideImage => s.type === "image";
 const isProfiles = (s: SlideItem): s is SlideProfiles => s.type === "profiles";
 const isDownload = (s: SlideItem): s is SlideDownload => s.type === "download";
+const isTable = (s: SlideItem): s is SlideTable => s.type === "table";
 
 function makeUniqueIds<T extends { id: string }>(arr: T[]): (T & { __domId: string })[] {
   const seen = new Map<string, number>();
@@ -321,6 +331,42 @@ export default function PresentationClient({ slug }: { slug: string }) {
                       {it.footnote && <div className="text-xs text-zinc-500 mt-1">{it.footnote}</div>}
                     </div>
                   ))}
+                </div>
+              )}
+
+              {isTable(activeSlide) && (
+                <div className="overflow-hidden rounded-2xl border bg-white">
+                  <div className="flex items-start justify-between gap-3 border-b bg-zinc-50 px-4 py-3">
+                    <div>
+                      <div className="text-sm font-medium text-zinc-900">{activeSlide.title}</div>
+                      {activeSlide.note ? <div className="mt-1 text-xs text-zinc-500">{activeSlide.note}</div> : null}
+                    </div>
+                  </div>
+
+                  <div className="overflow-auto">
+                    <table className="min-w-full border-collapse text-sm">
+                      <thead className="sticky top-0 bg-white">
+                        <tr className="border-b">
+                          {activeSlide.columns.map((c, i) => (
+                            <th key={i} className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold text-zinc-700">
+                              {c}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {activeSlide.rows.map((row, r) => (
+                          <tr key={r} className={r % 2 ? "bg-zinc-50/60" : "bg-white"}>
+                            {row.map((cell, c) => (
+                              <td key={c} className="whitespace-nowrap px-4 py-3 text-zinc-800">
+                                {String(cell)}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
 
