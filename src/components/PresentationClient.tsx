@@ -348,10 +348,6 @@ export default function PresentationClient({ slug }: { slug: string }) {
                   ) : null}
                 </div>
               )}
-alt={activeSlide.title} className="w-full rounded-xl border bg-white" />
-                  {activeSlide.caption && <div className="mt-2 text-sm text-zinc-600">{activeSlide.caption}</div>}
-                </div>
-              )}
 
               {isVideo(activeSlide) && (
                 <div className="aspect-video w-full overflow-hidden rounded-xl border bg-white">
