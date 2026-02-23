@@ -118,9 +118,11 @@ export default function PresentationClient({ slug }: { slug: string }) {
   const [slides, setSlides] = useState<SlideItem[]>([]);
   const [ready, setReady] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [imgErr, setImgErr] = useState<string | null>(null);
 
   useEffect(() => {
     setErr(null);
+    setImgErr(null);
     setReady(false);
     setSlides([]);
 
@@ -325,8 +327,28 @@ export default function PresentationClient({ slug }: { slug: string }) {
               {isChart(activeSlide) && <ChartRouter name={activeSlide.chart} args={activeSlide.args} />}
 
               {isImage(activeSlide) && (
-                <div>
-                  <img src={activeSlide.src} alt={activeSlide.title} className="w-full rounded-xl border bg-white" />
+                <div className="rounded-2xl border bg-white p-4">
+                  <div className="text-sm font-medium text-zinc-800">{activeSlide.title}</div>
+                  {activeSlide.caption ? (
+                    <div className="mt-1 text-xs text-zinc-500">{activeSlide.caption}</div>
+                  ) : null}
+                  <div className="mt-4 overflow-hidden rounded-xl border bg-zinc-50">
+                    <img
+                      src={activeSlide.src}
+                      alt={activeSlide.title}
+                      className="block h-auto w-full object-contain"
+                      loading="lazy"
+                      onError={() => setImgErr(activeSlide.src)}
+                    />
+                  </div>
+                  {imgErr ? (
+                    <div className="mt-2 text-xs text-red-600">
+                      Image failed to load: <code>{imgErr}</code>
+                    </div>
+                  ) : null}
+                </div>
+              )}
+alt={activeSlide.title} className="w-full rounded-xl border bg-white" />
                   {activeSlide.caption && <div className="mt-2 text-sm text-zinc-600">{activeSlide.caption}</div>}
                 </div>
               )}
