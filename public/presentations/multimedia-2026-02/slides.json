@@ -1,0 +1,83 @@
+[
+  {
+    "id": "welcome",
+    "type": "text",
+    "title": "Multimedia demo deck",
+    "navTitle": "Welcome",
+    "section": "General",
+    "md": "<p>This deck demonstrates video, images, downloads, interactive charts (with hover), and matching tables.</p><p>Use the index above to jump to any slide. Use Previous / Next to move across the full deck.</p>"
+  },
+
+  {
+    "id": "video-tyra-vimeo",
+    "type": "video",
+    "title": "Video: Tyra (Vimeo embed)",
+    "navTitle": "Video",
+    "section": "General",
+    "src": "https://player.vimeo.com/video/657831189"
+  },
+
+  {
+    "id": "image-tyra",
+    "type": "image",
+    "title": "Image: Tyra field (local)",
+    "navTitle": "Image",
+    "section": "General",
+    "src": "/fields/tyra/tyra-01.svg",
+    "caption": "Local image from /public/fields/tyra/. If this filename does not exist, tell me what you have in that folder and I will switch it."
+  },
+
+  {
+    "id": "download-pack",
+    "type": "download",
+    "title": "Download: Pack (placeholder PDF)",
+    "navTitle": "Download",
+    "section": "General",
+    "href": "/presentations/multimedia-2026-02/downloads/pack.pdf"
+  },
+
+  {
+    "id": "chart-prod-capex",
+    "type": "chart",
+    "title": "Chart: Production and capex summary",
+    "navTitle": "Prod+Capex",
+    "section": "Production",
+    "chart": "production-capex-summary"
+  },
+
+  {
+    "id": "table-prod-capex",
+    "type": "text",
+    "title": "Table: Production and capex (underlying numbers)",
+    "navTitle": "Prod+Capex table",
+    "section": "Production",
+    "md": "<div class=\"overflow-x-auto\"><table class=\"w-full text-sm border-collapse\"><thead><tr><th class=\"text-left border-b p-2\">Quarter</th><th class=\"text-left border-b p-2\">Production (boepd)</th><th class=\"text-left border-b p-2\">Capex (USD m)</th></tr></thead><tbody><tr><td class=\"border-b p-2\">Q1 2025</td><td class=\"border-b p-2\">32,000</td><td class=\"border-b p-2\">22.5</td></tr><tr><td class=\"border-b p-2\">Q2 2025</td><td class=\"border-b p-2\">37,800</td><td class=\"border-b p-2\">14.4</td></tr></tbody></table></div><p class=\"mt-2 text-xs text-neutral-500\">This table matches the demo values used in the chart component.</p>"
+  },
+
+  {
+    "id": "chart-prod-by-field",
+    "type": "chart",
+    "title": "Chart: Production by field (mboepd, net)",
+    "navTitle": "By field",
+    "section": "Production",
+    "chart": "prod-by-field"
+  },
+
+  {
+    "id": "table-prod-by-field",
+    "type": "text",
+    "title": "Table: Production by field (underlying numbers)",
+    "navTitle": "By field table",
+    "section": "Production",
+    "md": "<div class=\"overflow-x-auto\"><table class=\"w-full text-sm border-collapse\"><thead><tr><th class=\"text-left border-b p-2\">Field</th><th class=\"text-left border-b p-2\">mboepd (net)</th></tr></thead><tbody><tr><td class=\"border-b p-2\">Tyra</td><td class=\"border-b p-2\">16.8</td></tr><tr><td class=\"border-b p-2\">Halfdan</td><td class=\"border-b p-2\">10.6</td></tr><tr><td class=\"border-b p-2\">Dan</td><td class=\"border-b p-2\">6.1</td></tr><tr><td class=\"border-b p-2\">Gorm</td><td class=\"border-b p-2\">4.3</td></tr></tbody></table></div><p class=\"mt-2 text-xs text-neutral-500\">This table matches the demo values in ProdByField.tsx.</p>"
+  },
+
+  {
+    "id": "chart-oil-gas-mix",
+    "type": "chart",
+    "title": "Chart: Oil / gas mix (Q1–Q2)",
+    "navTitle": "Oil/gas mix",
+    "section": "Production",
+    "chart": "oil-gas-mix-q1q2"
+  }
+]

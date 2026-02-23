@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect x="0" y="0" width="1600" height="900" fill="#f4f4f5"/>
+  <rect x="60" y="60" width="1480" height="780" fill="#ffffff" stroke="#0f172a" stroke-width="4" rx="24"/>
+  <text x="100" y="160" font-family="system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="56" fill="#0f172a" font-weight="700">
+    TYRA — placeholder image
+  </text>
+  <text x="100" y="230" font-family="system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="28" fill="#334155">
+    Replace this file with a real Tyra image later (keep the same filename).
+  </text>
+  <text x="100" y="300" font-family="ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace" font-size="24" fill="#475569">
+    /public/fields/tyra/tyra-01.svg
+  </text>
+</svg>
