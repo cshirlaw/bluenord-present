@@ -322,7 +322,7 @@ export default function PresentationClient({ slug }: { slug: string }) {
                 </div>
               )}
 
-              {isChart(activeSlide) && <ChartRouter chart={activeSlide.chart} args={activeSlide.args} />}
+              {isChart(activeSlide) && <ChartRouter name={activeSlide.chart} args={activeSlide.args} />}
 
               {isImage(activeSlide) && (
                 <div>
