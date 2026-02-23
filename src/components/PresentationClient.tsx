@@ -1,11 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-/**
- * Client renderer for a single presentation slug.
- * Server page validates slug against manifest.json.
- */
-
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, Container, Prose } from "@/components/ui";
@@ -86,11 +81,31 @@ function makeUniqueIds<T extends { id: string }>(arr: T[]): (T & { __domId: stri
   });
 }
 
-function scrollToDomId(domId: string) {
-  const el = document.getElementById(domId);
+function readHash(): string {
+  if (typeof window === "undefined") return "";
+  const raw = (window.location.hash || "").replace(/^#/, "");
+  if (!raw) return "";
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
+}
+
+function setHash(id: string) {
+  if (typeof window === "undefined") return;
+  window.location.hash = encodeURIComponent(id);
+}
+
+function clearHash() {
+  if (typeof window === "undefined") return;
+  window.history.replaceState(null, "", window.location.pathname);
+}
+
+function scrollToDomId(id: string) {
+  const el = typeof document !== "undefined" ? document.getElementById(id) : null;
   if (!el) return;
   el.scrollIntoView({ behavior: "smooth", block: "start" });
-  history.replaceState(null, "", `#${encodeURIComponent(domId)}`);
 }
 
 export default function PresentationClient({ slug }: { slug: string }) {
@@ -98,7 +113,7 @@ export default function PresentationClient({ slug }: { slug: string }) {
   const cleanSlug = slug.toString().trim().replace(/\/+$/g, "").replace(/\.+$/g, "");
 
   useEffect(() => {
-    if (slug && slug !== cleanSlug) router.replace(`/presentations/${encodeURIComponent(cleanSlug)}`);
+    if (slug && slug !== cleanSlug) router.replace(`/${encodeURIComponent(cleanSlug)}`);
   }, [slug, cleanSlug, router]);
 
   const [slides, setSlides] = useState<SlideItem[]>([]);
@@ -170,6 +185,36 @@ export default function PresentationClient({ slug }: { slug: string }) {
     if (groups.length > 0) setActiveSection(groups[0].section);
   }, [groups]);
 
+  const [activeDomId, setActiveDomId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!ready) return;
+
+    const applyHash = () => {
+      const decoded = readHash();
+
+      if (!decoded) {
+        setActiveDomId(null);
+        return;
+      }
+
+      const found = slidesWithIds.find((s) => s.__domId === decoded);
+      if (!found) {
+        setActiveDomId(null);
+        return;
+      }
+
+      const section = found.section?.trim() || "General";
+      setActiveSection(section);
+      setActiveDomId(found.__domId);
+      setTimeout(() => scrollToDomId(found.__domId), 30);
+    };
+
+    applyHash();
+    window.addEventListener("hashchange", applyHash);
+    return () => window.removeEventListener("hashchange", applyHash);
+  }, [ready, slidesWithIds]);
+
   const filteredSlides = useMemo<SlideWithDom[]>(
     () =>
       slidesWithIds.filter(
@@ -178,46 +223,10 @@ export default function PresentationClient({ slug }: { slug: string }) {
     [slidesWithIds, activeSection]
   );
 
-  const [activeDomId, setActiveDomId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!ready) return;
-
-    const hash = (typeof window !== "undefined" ? window.location.hash : "").replace(/^#/, "");
-    const decoded = hash ? decodeURIComponent(hash) : "";
-    if (decoded && filteredSlides.some((s) => s.__domId === decoded)) {
-      setActiveDomId(decoded);
-      setTimeout(() => scrollToDomId(decoded), 50);
-      return;
-    }
-
-    if (filteredSlides.length > 0) setActiveDomId(filteredSlides[0].__domId);
-  }, [ready, filteredSlides]);
-
-  useEffect(() => {
-    if (!ready) return;
-    if (filteredSlides.length === 0) return;
-
-    const els = filteredSlides
-      .map((s) => document.getElementById(s.__domId))
-      .filter(Boolean) as HTMLElement[];
-
-    if (els.length === 0) return;
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
-        const id = visible?.target?.id;
-        if (id) setActiveDomId(id);
-      },
-      { root: null, rootMargin: "0px 0px -55% 0px", threshold: [0.15, 0.3, 0.5, 0.7] }
-    );
-
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, [ready, filteredSlides]);
+  const activeSlide = useMemo<SlideWithDom | null>(() => {
+    if (!activeDomId) return null;
+    return filteredSlides.find((s) => s.__domId === activeDomId) ?? null;
+  }, [filteredSlides, activeDomId]);
 
   const navIndex = useMemo(() => {
     if (!activeDomId) return -1;
@@ -257,30 +266,36 @@ export default function PresentationClient({ slug }: { slug: string }) {
         </div>
       )}
 
-      <div className="space-y-4 md:space-y-6 pb-20">
-        {filteredSlides.map((s) => (
+      {!activeSlide && (
+        <div className="rounded-xl border bg-white p-4 text-sm text-zinc-700">
+          Select a slide from the index above.
+        </div>
+      )}
+
+      {activeSlide && (
+        <div className="pb-20">
           <motion.div
-            key={s.__domId}
-            id={s.__domId}
+            key={activeSlide.__domId}
+            id={activeSlide.__domId}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.18 }}
           >
             <Card className="p-4 md:p-6">
               <div className="mb-3 flex items-center justify-between gap-3">
-                <h2 className="text-lg md:text-xl font-semibold">{s.title}</h2>
-                {isDownload(s) && <DownloadButton href={s.href} />}
+                <h2 className="text-lg md:text-xl font-semibold">{activeSlide.title}</h2>
+                {isDownload(activeSlide) && <DownloadButton href={activeSlide.href} />}
               </div>
 
-              {isText(s) && (
+              {isText(activeSlide) && (
                 <Prose>
-                  <div dangerouslySetInnerHTML={{ __html: s.md }} />
+                  <div dangerouslySetInnerHTML={{ __html: activeSlide.md }} />
                 </Prose>
               )}
 
-              {isStats(s) && (
+              {isStats(activeSlide) && (
                 <div className="grid gap-3 md:grid-cols-2">
-                  {s.items.map((it, idx) => (
+                  {activeSlide.items.map((it, idx) => (
                     <div key={idx} className="rounded-xl border bg-white p-3">
                       <div className="text-sm text-zinc-600">{it.label}</div>
                       <div className="text-xl font-semibold">{it.value}</div>
@@ -290,64 +305,72 @@ export default function PresentationClient({ slug }: { slug: string }) {
                 </div>
               )}
 
-              {isChart(s) && <ChartRouter chart={s.chart} args={s.args} />}
+              {isChart(activeSlide) && <ChartRouter chart={activeSlide.chart} args={activeSlide.args} />}
 
-              {isImage(s) && (
+              {isImage(activeSlide) && (
                 <div>
-                  <img src={s.src} alt={s.title} className="w-full rounded-xl border bg-white" />
-                  {s.caption && <div className="mt-2 text-sm text-zinc-600">{s.caption}</div>}
+                  <img
+                    src={activeSlide.src}
+                    alt={activeSlide.title}
+                    className="w-full rounded-xl border bg-white"
+                  />
+                  {activeSlide.caption && (
+                    <div className="mt-2 text-sm text-zinc-600">{activeSlide.caption}</div>
+                  )}
                 </div>
               )}
 
-              {isVideo(s) && (
+              {isVideo(activeSlide) && (
                 <div className="aspect-video w-full overflow-hidden rounded-xl border bg-white">
                   <iframe
                     className="h-full w-full"
-                    src={s.src}
-                    title={s.title}
+                    src={activeSlide.src}
+                    title={activeSlide.title}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
                 </div>
               )}
 
-              {isProfiles(s) && <ProfilesGrid people={s.people} />}
+              {isProfiles(activeSlide) && <ProfilesGrid people={activeSlide.people} />}
             </Card>
           </motion.div>
-        ))}
-      </div>
-
-      {filteredSlides.length > 0 && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur">
-          <div className="mx-auto max-w-6xl px-4 md:px-6 py-2 flex items-center justify-between gap-2">
-            <button
-              type="button"
-              className="rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
-              disabled={!prevId}
-              onClick={() => prevId && scrollToDomId(prevId)}
-            >
-              Previous
-            </button>
-
-            <button
-              type="button"
-              className="rounded-lg border px-3 py-2 text-sm"
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            >
-              Back to index
-            </button>
-
-            <button
-              type="button"
-              className="rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
-              disabled={!nextId}
-              onClick={() => nextId && scrollToDomId(nextId)}
-            >
-              Next
-            </button>
-          </div>
         </div>
       )}
+
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur">
+        <div className="mx-auto max-w-6xl px-4 md:px-6 py-2 flex items-center justify-between gap-2">
+          <button
+            type="button"
+            className="rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
+            disabled={!prevId}
+            onClick={() => prevId && setHash(prevId)}
+          >
+            Previous
+          </button>
+
+          <button
+            type="button"
+            className="rounded-lg border px-3 py-2 text-sm"
+            onClick={() => {
+              clearHash();
+              setActiveDomId(null);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            Back to index
+          </button>
+
+          <button
+            type="button"
+            className="rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
+            disabled={!nextId}
+            onClick={() => nextId && setHash(nextId)}
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </Container>
   );
 }
