@@ -1,23 +1,24 @@
 import { notFound, redirect } from "next/navigation";
-import fs from "node:fs";
-import path from "node:path";
+import manifest from "../../../public/presentations/manifest.json";
 
-function slidesJsonExists(slug: string): boolean {
-  const p = path.join(process.cwd(), "public", "presentations", slug, "slides.json");
-  return fs.existsSync(p);
+type ManifestItem = { slug: string };
+
+const BLOCKED = new Set(["nov-2025-clean"]);
+
+function allowedSlugs(): Set<string> {
+  const items = (manifest as ManifestItem[]) || [];
+  return new Set(items.map((i) => i.slug).filter(Boolean));
 }
 
-export default async function SlugPage({ params }: { params: unknown }) {
+export default async function VanitySlugPage({ params }: { params: unknown }) {
   const resolved = await Promise.resolve(params as any);
   const slug = resolved?.slug;
 
-  if (typeof slug !== "string" || slug.length === 0) {
-    notFound();
-  }
+  if (typeof slug !== "string" || slug.length === 0) notFound();
+  if (BLOCKED.has(slug)) notFound();
 
-  if (!slidesJsonExists(slug)) {
-    notFound();
-  }
+  const allowed = allowedSlugs();
+  if (!allowed.has(slug)) notFound();
 
-  redirect(`/presentations/${slug}`);
+  redirect(`/presentations/${encodeURIComponent(slug)}`);
 }
