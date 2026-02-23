@@ -1,19 +1,21 @@
 import { notFound, redirect } from "next/navigation";
-import path from "node:path";
 import fs from "node:fs";
+import path from "node:path";
 
-export default function SlugPage({ params }: { params: { slug: string } }) {
-  const slug = params.slug;
+function slidesJsonExists(slug: string): boolean {
+  const p = path.join(process.cwd(), "public", "presentations", slug, "slides.json");
+  return fs.existsSync(p);
+}
 
-  const slidesPath = path.join(
-    process.cwd(),
-    "public",
-    "presentations",
-    slug,
-    "slides.json"
-  );
+export default async function SlugPage({ params }: { params: unknown }) {
+  const resolved = await Promise.resolve(params as any);
+  const slug = resolved?.slug;
 
-  if (!fs.existsSync(slidesPath)) {
+  if (typeof slug !== "string" || slug.length === 0) {
+    notFound();
+  }
+
+  if (!slidesJsonExists(slug)) {
     notFound();
   }
 
